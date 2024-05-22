@@ -4,6 +4,9 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import SearchIcon from "@/Components/Icons/Search";
 import ThreeDotIcon from "@/Components/Icons/TheeDot";
+import DownloadIcon from "@/Components/Icons/Download";
+import UploadIcon from "@/Components/Icons/Upload";
+import PlusIcon from "@/Components/Icons/Plus";
 
 export default function Event({ auth, events }) {
     console.log(events);
@@ -27,8 +30,8 @@ export default function Event({ auth, events }) {
                             <div className="-m-1.5 overflow-x-auto">
                                 <div className="p-1.5 min-w-full inline-block align-middle">
                                     <div className="border rounded-lg divide-y divide-gray-200">
-                                        <div className="py-3 px-4">
-                                            <div className="relative max-w-xs">
+                                        <div className="grid grid-cols-3 gap-4 items-center py-3 px-4">
+                                            <div className="col-span-2 relative w-full">
                                                 <label className="sr-only">
                                                     Search
                                                 </label>
@@ -36,12 +39,33 @@ export default function Event({ auth, events }) {
                                                     type="text"
                                                     name="hs-table-with-pagination-search"
                                                     id="hs-table-with-pagination-search"
-                                                    className="py-2 px-3 ps-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                                    className="py-2.5 px-3 ps-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-0 focus:ring-gray-900 disabled:opacity-50 disabled:pointer-events-none"
                                                     placeholder="Search"
                                                 />
                                                 <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
                                                     <SearchIcon/>
                                                 </div>
+                                            </div>
+                                            <div className="col-span-1">
+                                                <div className="grid grid-cols-3 gap-4">
+                                                    <div className="col-span-1">
+                                                        <button type="button" class="w-full py-2.5 text-xs font-medium text-gray-400 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-0 rounded-md flex justify-center">
+                                                            <DownloadIcon/>
+                                                        </button>
+                                                    </div>
+                                                    <div className="col-span-1">
+                                                        <button type="button" class="w-full py-2.5 text-xs font-medium text-gray-400 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-0 rounded-md flex justify-center">
+                                                            <UploadIcon/>
+                                                        </button>
+                                                    </div>
+                                                    <div className="col-span-1">
+                                                        <button type="button" class="w-full py-2.5 text-xs font-medium text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-0 rounded-md flex items-center px-3">
+                                                            <PlusIcon />
+                                                            <span>Add Source</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
                                         <div className="overflow-hidden">
@@ -50,13 +74,13 @@ export default function Event({ auth, events }) {
                                                     <tr>
                                                         <th
                                                             scope="col"
-                                                            className="py-3 px-4 pe-0"
+                                                            className="py-3 px-3 pe-0"
                                                         >
                                                             <div className="flex items-center h-5">
                                                                 <input
                                                                     id="hs-table-pagination-checkbox-all"
                                                                     type="checkbox"
-                                                                    className="border-gray-200 rounded text-blue-600 focus:ring-blue-500"
+                                                                    className="border-gray-200 rounded text-gray-900 focus:ring-gray-900"
                                                                 />
                                                                 <label
                                                                     htmlFor="hs-table-pagination-checkbox-all"
@@ -107,41 +131,41 @@ export default function Event({ auth, events }) {
                                                 <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
                                                     {events.data.map((event) => (
                                                         <tr key={event.id}>
-                                                            <td className="py-3 ps-4">
+                                                            <td className="py-3 ps-3">
                                                                 <div className="flex items-center h-5">
                                                                     <input
-                                                                        id="hs-table-pagination-checkbox-1"
+                                                                        id={`hs-table-pagination-checkbox-${event.id}`}
                                                                         type="checkbox"
-                                                                        className="border-gray-200 rounded text-blue-600 focus:ring-blue-500"
+                                                                        className="border-gray-200 rounded text-gray-900 focus:ring-gray-900"
                                                                     />
                                                                     <label
-                                                                        htmlFor="hs-table-pagination-checkbox-1"
+                                                                        htmlFor={`hs-table-pagination-checkbox-${event.id}`}
                                                                         className="sr-only"
                                                                     >
                                                                         Checkbox
                                                                     </label>
                                                                 </div>
                                                             </td>
-                                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                                            <td className="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
                                                                 John Brown
                                                             </td>
-                                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                                            <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                                                 Australia
                                                             </td>
-                                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                                            <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                                                 Media Release
                                                             </td>
-                                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                                            <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                                                 10:09 AM, 2 Jan 2024
                                                             </td>
-                                                            <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                                                            <td className="px-6 py-3 whitespace-nowrap text-end text-sm font-medium">
                                                                 <input
                                                                     type="checkbox"
-                                                                    id="hs-xs-switch"
-                                                                    className="relative w-[35px] h-[21px] bg-gray-100 border-transparent text-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:ring-blue-600 disabled:opacity-50 disabled:pointer-events-none checked:bg-none checked:text-blue-600 checked:border-blue-600 focus:checked:border-blue-600 before:inline-block before:size-4 before:bg-white checked:before:bg-blue-200 before:translate-x-0 checked:before:translate-x-full before:rounded-full before:shadow before:transform before:ring-0 before:transition before:ease-in-out before:duration-200"
+                                                                    id={`hs-xs-switch-${event.id}`}
+                                                                    className="relative w-[35px] h-[18px] bg-gray-100 border-transparent text-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:ring-gray-900 disabled:opacity-50 disabled:pointer-events-none checked:bg-none checked:text-gray-900 checked:border-gray-900 focus:checked:border-gray-900 before:inline-block before:size-4 before:bg-white checked:before:bg-gray-400 before:translate-x-0 checked:before:translate-x-full before:rounded-full before:shadow before:transform before:ring-0 before:transition before:ease-in-out before:duration-200"
                                                                 />
                                                             </td>
-                                                            <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                                                            <td className="px-6 py-3 whitespace-nowrap text-end text-sm font-medium">
                                                                 <div className="flex justify-center">
                                                                     <div className="ms-3 relative">
                                                                         <Dropdown>

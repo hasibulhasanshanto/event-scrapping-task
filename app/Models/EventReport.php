@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class EventReport extends Model
@@ -36,5 +37,14 @@ class EventReport extends Model
         return [
             'report' => 'array',
         ];
+    }
+
+
+    /**
+     * Get the event that owns event report.
+     */
+    public function event(): BelongsTo
+    {
+        return $this->belongsTo(Event::class);
     }
 }

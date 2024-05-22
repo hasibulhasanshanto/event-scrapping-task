@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Event extends Model
@@ -36,4 +38,21 @@ class Event extends Model
         'document_remove_text_from_date',
         'document_date_format'
     ];
+
+
+    /**
+     * Get the user that owns event.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the event reports of event.
+     */
+    public function eventReports(): HasMany
+    {
+        return $this->hasMany(EventReport::class);
+    }
 }
