@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('avatar')->nullable();
-            $table->enum('role', ['author', 'client']);
+            $table->string('avatar')->default('avatar.png');
+            $table->enum('role', ['author', 'client'])->default('client');
             $table->boolean('status')->default(true);
             $table->string('password');
             $table->timestamp('last_login_at')->nullable();
