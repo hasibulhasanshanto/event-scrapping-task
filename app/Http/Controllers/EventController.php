@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use App\Http\Resources\EventResource;
 
 class EventController extends Controller
 {
@@ -12,7 +14,10 @@ class EventController extends Controller
      */
     public function index()
     {
-        //
+        $events = Event::paginate(10)->onEachSide(1);
+        return Inertia::render('Event/Index', [
+            'events' => EventResource::collection($events),
+        ]);
     }
 
     /**
