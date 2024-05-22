@@ -2,6 +2,7 @@ import { useState } from "react";
 import Dropdown from "@/Components/Dropdown";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
+import NavLink from '@/Components/NavLink';
 import SearchIcon from "@/Components/Icons/Search";
 import ThreeDotIcon from "@/Components/Icons/TheeDot";
 import DownloadIcon from "@/Components/Icons/Download";
@@ -9,7 +10,10 @@ import UploadIcon from "@/Components/Icons/Upload";
 import PlusIcon from "@/Components/Icons/Plus";
 
 export default function Event({ auth, events }) {
-    console.log(events);
+
+    const changeIsEnabled = (event) => {
+        console.log(event);
+    }
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -24,7 +28,7 @@ export default function Event({ auth, events }) {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900">Events List</div>
+                        <div className="p-6 text-gray-900 text-lg font-medium">Events List</div>
 
                         <div className="flex flex-col p-5">
                             <div className="-m-1.5 overflow-x-auto">
@@ -49,20 +53,20 @@ export default function Event({ auth, events }) {
                                             <div className="col-span-1">
                                                 <div className="grid grid-cols-3 gap-4">
                                                     <div className="col-span-1">
-                                                        <button type="button" class="w-full py-2.5 text-xs font-medium text-gray-400 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-0 rounded-md flex justify-center">
+                                                        <button type="button" className="w-full py-2.5 text-xs font-medium text-gray-400 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-0 rounded-md flex justify-center">
                                                             <DownloadIcon/>
                                                         </button>
                                                     </div>
                                                     <div className="col-span-1">
-                                                        <button type="button" class="w-full py-2.5 text-xs font-medium text-gray-400 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-0 rounded-md flex justify-center">
+                                                        <button type="button" className="w-full py-2.5 text-xs font-medium text-gray-400 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-0 rounded-md flex justify-center">
                                                             <UploadIcon/>
                                                         </button>
                                                     </div>
                                                     <div className="col-span-1">
-                                                        <button type="button" class="w-full py-2.5 text-xs font-medium text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-0 rounded-md flex items-center px-3">
+                                                        <NavLink href={route('events.create')} className="w-full !py-2.5 text-xs font-medium text-white hover:!text-white bg-gray-800 hover:bg-gray-900 focus:!outline-none focus:!ring-0 rounded-md flex items-center !px-3">
                                                             <PlusIcon />
                                                             <span>Add Source</span>
-                                                        </button>
+                                                        </NavLink>
                                                     </div>
                                                 </div>
 
@@ -147,29 +151,35 @@ export default function Event({ auth, events }) {
                                                                 </div>
                                                             </td>
                                                             <td className="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                                                John Brown
+                                                                {event.name}
                                                             </td>
                                                             <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                                                Australia
+                                                            {event.country}
                                                             </td>
                                                             <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                                                Media Release
+                                                            {event.document}
                                                             </td>
                                                             <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                                                10:09 AM, 2 Jan 2024
+                                                            {event.updated_at}
                                                             </td>
                                                             <td className="px-6 py-3 whitespace-nowrap text-end text-sm font-medium">
                                                                 <input
+                                                                    id={`scanning-${event.id}`}
+                                                                    checked={event.horizon_scanning}
                                                                     type="checkbox"
-                                                                    id={`hs-xs-switch-${event.id}`}
                                                                     className="relative w-[35px] h-[18px] bg-gray-100 border-transparent text-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:ring-gray-900 disabled:opacity-50 disabled:pointer-events-none checked:bg-none checked:text-gray-900 checked:border-gray-900 focus:checked:border-gray-900 before:inline-block before:size-4 before:bg-white checked:before:bg-gray-400 before:translate-x-0 checked:before:translate-x-full before:rounded-full before:shadow before:transform before:ring-0 before:transition before:ease-in-out before:duration-200"
+                                                                    onChange={(e) =>
+                                                                        changeIsEnabled(
+                                                                            event
+                                                                        )
+                                                                    }
                                                                 />
                                                             </td>
                                                             <td className="px-6 py-3 whitespace-nowrap text-end text-sm font-medium">
                                                                 <div className="flex justify-center">
-                                                                    <div className="ms-3 relative">
+                                                                    <div className="ms-3">
                                                                         <Dropdown>
-                                                                            <Dropdown.Trigger>
+                                                                            <Dropdown.Trigger className="relative">
                                                                                 <span className="inline-flex rounded-md">
                                                                                     <button
                                                                                         type="button"
@@ -180,7 +190,7 @@ export default function Event({ auth, events }) {
                                                                                 </span>
                                                                             </Dropdown.Trigger>
 
-                                                                            <Dropdown.Content>
+                                                                            <Dropdown.Content className="absolute z-50">
                                                                                 <Dropdown.Link
                                                                                     href={route(
                                                                                         "profile.edit"
