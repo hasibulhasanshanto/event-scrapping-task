@@ -33,10 +33,8 @@ export default function EventCreate({ auth }) {
 
     const eventCreateHandler = (e) => {
         e.preventDefault();
-        console.log("Event Created");
-
-        post(route('events.store'));
-    }
+        post(route("events.store"));
+    };
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -101,7 +99,6 @@ export default function EventCreate({ auth }) {
                                                 className="mt-1 block w-full"
                                                 autoComplete="url"
                                                 placeholder="Enter URL"
-                                                isFocused={true}
                                                 onChange={(e) =>
                                                     setData(
                                                         "url",
@@ -220,7 +217,6 @@ export default function EventCreate({ auth }) {
                                                 className="mt-1 block w-full"
                                                 autoComplete="reference_selector"
                                                 placeholder="Enter reference selector"
-                                                isFocused={true}
                                                 onChange={(e) =>
                                                     setData(
                                                         "reference_selector",
@@ -281,7 +277,6 @@ export default function EventCreate({ auth }) {
                                                     className="mt-1 block w-full"
                                                     autoComplete="source_container"
                                                     placeholder="Enter source container"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "source_container",
@@ -311,7 +306,6 @@ export default function EventCreate({ auth }) {
                                                     className="mt-1 block w-full"
                                                     autoComplete="source_link"
                                                     placeholder="Enter link"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "source_link",
@@ -339,7 +333,6 @@ export default function EventCreate({ auth }) {
                                                     className="mt-1 block w-full"
                                                     autoComplete="source_title"
                                                     placeholder="Enter source title"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "source_title",
@@ -371,7 +364,6 @@ export default function EventCreate({ auth }) {
                                                     className="mt-1 block w-full"
                                                     autoComplete="source_description"
                                                     placeholder="Enter source description"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "source_description",
@@ -401,7 +393,6 @@ export default function EventCreate({ auth }) {
                                                     className="mt-1 block w-full"
                                                     autoComplete="source_date"
                                                     placeholder="Enter source date"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "source_date",
@@ -431,7 +422,6 @@ export default function EventCreate({ auth }) {
                                                     className="mt-1 block w-full"
                                                     autoComplete="source_remove_text_from_date"
                                                     placeholder="Enter remove text from date"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "source_remove_text_from_date",
@@ -463,7 +453,6 @@ export default function EventCreate({ auth }) {
                                                     className="mt-1 block w-full"
                                                     autoComplete="source_date_format"
                                                     placeholder="Enter source date format"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "source_date_format",
@@ -504,7 +493,6 @@ export default function EventCreate({ auth }) {
                                                     className="mt-1 block w-full"
                                                     autoComplete="document_title"
                                                     placeholder="Enter document title"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "document_title",
@@ -536,7 +524,6 @@ export default function EventCreate({ auth }) {
                                                     className="mt-1 block w-full"
                                                     autoComplete="document_description"
                                                     placeholder="Enter document description"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "document_description",
@@ -566,7 +553,6 @@ export default function EventCreate({ auth }) {
                                                     className="mt-1 block w-full"
                                                     autoComplete="document_date"
                                                     placeholder="Enter document date"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "document_date",
@@ -598,7 +584,6 @@ export default function EventCreate({ auth }) {
                                                     className="mt-1 block w-full"
                                                     autoComplete="document_remove_text_from_date"
                                                     placeholder="Enter remove text from date"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "document_remove_text_from_date",
@@ -630,7 +615,6 @@ export default function EventCreate({ auth }) {
                                                     className="mt-1 block w-full"
                                                     autoComplete="document_date_format"
                                                     placeholder="Enter date format"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "document_date_format",

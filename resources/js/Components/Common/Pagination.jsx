@@ -19,6 +19,7 @@ export default function Pagination({ links = [] }) {
                                 __html: link.label,
                             }}
                             disabled={!link.url ? "disabled" : ""}
+                            preserveScroll={true}
                         ></Link>
                     </li>
                 ))}

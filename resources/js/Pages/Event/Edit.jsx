@@ -10,28 +10,33 @@ import NavLink from "@/Components/NavLink";
 
 export default function EventEdit({ auth, event }) {
     const { data, setData, put, processing, errors, reset } = useForm({
-        name: event.name,
-        url: event.url,
-        country: event.country,
-        document: event.document,
-        source_type: event.document,
-        reference_selector : event.reference_selector,
-        horizon_scanning: event.horizon_scanning,
-        source_container: event.source_container,
-        source_link: event.source_link,
-        source_title: event.source_title,
-        source_description: event.source_description,
-        source_date: event.source_date,
-        source_remove_text_from_date: event.source_remove_text_from_date,
-        source_date_format: event.source_date_format,
-        document_title: event.document_title,
-        document_description: event.document_description,
-        document_date: event.document_date,
-        document_remove_text_from_date: event.document_remove_text_from_date,
-        document_date_format: event.document_date_format,
+        name: event.data.name,
+        url: event.data.url,
+        country: event.data.country,
+        document: event.data.document,
+        source_type: event.data.document,
+        reference_selector: event.data.reference_selector,
+        horizon_scanning: event.data.horizon_scanning,
+        source_container: event.data.source_container,
+        source_link: event.data.source_link,
+        source_title: event.data.source_title,
+        source_description: event.data.source_description,
+        source_date: event.data.source_date,
+        source_remove_text_from_date: event.data.source_remove_text_from_date,
+        source_date_format: event.data.source_date_format,
+        document_title: event.data.document_title,
+        document_description: event.data.document_description,
+        document_date: event.data.document_date,
+        document_remove_text_from_date:
+            event.data.document_remove_text_from_date,
+        document_date_format: event.data.document_date_format,
     });
 
-    console.log(event);
+    const eventUpdateHandler = (e) => {
+        e.preventDefault();
+        put(route("events.update", event.data.id));
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -46,8 +51,7 @@ export default function EventEdit({ auth, event }) {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-
-                        <form action="">
+                        <form onSubmit={eventUpdateHandler}>
                             <div className="border border-gray-300 rounded-md p-6 m-5">
                                 <div>
                                     <h3 className="text-md font-medium text-gray-700 pb-5">
@@ -97,7 +101,6 @@ export default function EventEdit({ auth, event }) {
                                                 className="mt-1 block w-full"
                                                 autoComplete="url"
                                                 placeholder="Enter URL"
-                                                isFocused={true}
                                                 onChange={(e) =>
                                                     setData(
                                                         "url",
@@ -214,7 +217,6 @@ export default function EventEdit({ auth, event }) {
                                                 className="mt-1 block w-full"
                                                 autoComplete="reference_selector"
                                                 placeholder="Enter reference selector"
-                                                isFocused={true}
                                                 onChange={(e) =>
                                                     setData(
                                                         "reference_selector",
@@ -224,7 +226,9 @@ export default function EventEdit({ auth, event }) {
                                             />
 
                                             <InputError
-                                                message={errors.reference_selector}
+                                                message={
+                                                    errors.reference_selector
+                                                }
                                                 className="mt-2"
                                             />
                                         </div>
@@ -267,11 +271,12 @@ export default function EventEdit({ auth, event }) {
                                                     id="source_container"
                                                     type="text"
                                                     name="source_container"
-                                                    value={data.source_container}
+                                                    value={
+                                                        data.source_container
+                                                    }
                                                     className="mt-1 block w-full"
                                                     autoComplete="source_container"
                                                     placeholder="Enter source container"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "source_container",
@@ -281,7 +286,9 @@ export default function EventEdit({ auth, event }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.source_container}
+                                                    message={
+                                                        errors.source_container
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -299,7 +306,6 @@ export default function EventEdit({ auth, event }) {
                                                     className="mt-1 block w-full"
                                                     autoComplete="source_link"
                                                     placeholder="Enter link"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "source_link",
@@ -327,7 +333,6 @@ export default function EventEdit({ auth, event }) {
                                                     className="mt-1 block w-full"
                                                     autoComplete="source_title"
                                                     placeholder="Enter source title"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "source_title",
@@ -337,7 +342,9 @@ export default function EventEdit({ auth, event }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.source_title}
+                                                    message={
+                                                        errors.source_title
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -351,11 +358,12 @@ export default function EventEdit({ auth, event }) {
                                                     id="source_description"
                                                     type="text"
                                                     name="source_description"
-                                                    value={data.source_description}
+                                                    value={
+                                                        data.source_description
+                                                    }
                                                     className="mt-1 block w-full"
                                                     autoComplete="source_description"
                                                     placeholder="Enter source description"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "source_description",
@@ -365,7 +373,9 @@ export default function EventEdit({ auth, event }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.source_description}
+                                                    message={
+                                                        errors.source_description
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -383,7 +393,6 @@ export default function EventEdit({ auth, event }) {
                                                     className="mt-1 block w-full"
                                                     autoComplete="source_date"
                                                     placeholder="Enter source date"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "source_date",
@@ -407,11 +416,12 @@ export default function EventEdit({ auth, event }) {
                                                     id="source_remove_text_from_date"
                                                     type="text"
                                                     name="source_remove_text_from_date"
-                                                    value={data.source_remove_text_from_date}
+                                                    value={
+                                                        data.source_remove_text_from_date
+                                                    }
                                                     className="mt-1 block w-full"
                                                     autoComplete="source_remove_text_from_date"
                                                     placeholder="Enter remove text from date"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "source_remove_text_from_date",
@@ -421,7 +431,9 @@ export default function EventEdit({ auth, event }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.source_remove_text_from_date}
+                                                    message={
+                                                        errors.source_remove_text_from_date
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -435,11 +447,12 @@ export default function EventEdit({ auth, event }) {
                                                     id="source_date_format"
                                                     type="text"
                                                     name="source_date_format"
-                                                    value={data.source_date_format}
+                                                    value={
+                                                        data.source_date_format
+                                                    }
                                                     className="mt-1 block w-full"
                                                     autoComplete="source_date_format"
                                                     placeholder="Enter source date format"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "source_date_format",
@@ -449,7 +462,9 @@ export default function EventEdit({ auth, event }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.source_date_format}
+                                                    message={
+                                                        errors.source_date_format
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -478,7 +493,6 @@ export default function EventEdit({ auth, event }) {
                                                     className="mt-1 block w-full"
                                                     autoComplete="document_title"
                                                     placeholder="Enter document title"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "document_title",
@@ -488,7 +502,9 @@ export default function EventEdit({ auth, event }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.document_title}
+                                                    message={
+                                                        errors.document_title
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -502,11 +518,12 @@ export default function EventEdit({ auth, event }) {
                                                     id="document_description"
                                                     type="text"
                                                     name="document_description"
-                                                    value={data.document_description}
+                                                    value={
+                                                        data.document_description
+                                                    }
                                                     className="mt-1 block w-full"
                                                     autoComplete="document_description"
                                                     placeholder="Enter document description"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "document_description",
@@ -516,7 +533,9 @@ export default function EventEdit({ auth, event }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.document_description}
+                                                    message={
+                                                        errors.document_description
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -534,7 +553,6 @@ export default function EventEdit({ auth, event }) {
                                                     className="mt-1 block w-full"
                                                     autoComplete="document_date"
                                                     placeholder="Enter document date"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "document_date",
@@ -544,7 +562,9 @@ export default function EventEdit({ auth, event }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.document_date}
+                                                    message={
+                                                        errors.document_date
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -558,11 +578,12 @@ export default function EventEdit({ auth, event }) {
                                                     id="document_remove_text_from_date"
                                                     type="text"
                                                     name="document_remove_text_from_date"
-                                                    value={data.document_remove_text_from_date}
+                                                    value={
+                                                        data.document_remove_text_from_date
+                                                    }
                                                     className="mt-1 block w-full"
                                                     autoComplete="document_remove_text_from_date"
                                                     placeholder="Enter remove text from date"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "document_remove_text_from_date",
@@ -572,7 +593,9 @@ export default function EventEdit({ auth, event }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.document_remove_text_from_date}
+                                                    message={
+                                                        errors.document_remove_text_from_date
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -586,11 +609,12 @@ export default function EventEdit({ auth, event }) {
                                                     id="document_date_format"
                                                     type="text"
                                                     name="document_date_format"
-                                                    value={data.document_date_format}
+                                                    value={
+                                                        data.document_date_format
+                                                    }
                                                     className="mt-1 block w-full"
                                                     autoComplete="document_date_format"
                                                     placeholder="Enter date format"
-                                                    isFocused={true}
                                                     onChange={(e) =>
                                                         setData(
                                                             "document_date_format",
@@ -600,7 +624,9 @@ export default function EventEdit({ auth, event }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.document_date_format}
+                                                    message={
+                                                        errors.document_date_format
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>

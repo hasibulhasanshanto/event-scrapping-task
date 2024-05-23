@@ -16,7 +16,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::paginate(10)->onEachSide(1);
+        $events = Event::orderBy('id', 'desc')->paginate(10)->onEachSide(1);
         return Inertia::render('Event/Index', [
             'events' => EventResource::collection($events),
         ]);
@@ -56,7 +56,7 @@ class EventController extends Controller
     public function edit(Event $event)
     {
         return Inertia::render('Event/Edit', [
-            'event' => $event,
+            'event' => new EventResource($event),
         ]);
     }
 
