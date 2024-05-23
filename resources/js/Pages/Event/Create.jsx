@@ -15,7 +15,7 @@ export default function EventCreate({ auth }) {
         country: "",
         document: "",
         source_type: "",
-        reference_selector : "",
+        reference_selector: "",
         horizon_scanning: true,
         source_container: "",
         source_link: "",
@@ -31,6 +31,12 @@ export default function EventCreate({ auth }) {
         document_date_format: "",
     });
 
+    const eventCreateHandler = (e) => {
+        e.preventDefault();
+        console.log("Event Created");
+
+        post(route('events.store'));
+    }
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -45,8 +51,7 @@ export default function EventCreate({ auth }) {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-
-                        <form action="">
+                        <form onSubmit={eventCreateHandler}>
                             <div className="border border-gray-300 rounded-md p-6 m-5">
                                 <div>
                                     <h3 className="text-md font-medium text-gray-700 pb-5">
@@ -223,7 +228,9 @@ export default function EventCreate({ auth }) {
                                             />
 
                                             <InputError
-                                                message={errors.reference_selector}
+                                                message={
+                                                    errors.reference_selector
+                                                }
                                                 className="mt-2"
                                             />
                                         </div>
@@ -266,7 +273,9 @@ export default function EventCreate({ auth }) {
                                                     id="source_container"
                                                     type="text"
                                                     name="source_container"
-                                                    value={data.source_container}
+                                                    value={
+                                                        data.source_container
+                                                    }
                                                     className="mt-1 block w-full"
                                                     autoComplete="source_container"
                                                     placeholder="Enter source container"
@@ -280,7 +289,9 @@ export default function EventCreate({ auth }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.source_container}
+                                                    message={
+                                                        errors.source_container
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -336,7 +347,9 @@ export default function EventCreate({ auth }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.source_title}
+                                                    message={
+                                                        errors.source_title
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -350,7 +363,9 @@ export default function EventCreate({ auth }) {
                                                     id="source_description"
                                                     type="text"
                                                     name="source_description"
-                                                    value={data.source_description}
+                                                    value={
+                                                        data.source_description
+                                                    }
                                                     className="mt-1 block w-full"
                                                     autoComplete="source_description"
                                                     placeholder="Enter source description"
@@ -364,7 +379,9 @@ export default function EventCreate({ auth }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.source_description}
+                                                    message={
+                                                        errors.source_description
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -406,7 +423,9 @@ export default function EventCreate({ auth }) {
                                                     id="source_remove_text_from_date"
                                                     type="text"
                                                     name="source_remove_text_from_date"
-                                                    value={data.source_remove_text_from_date}
+                                                    value={
+                                                        data.source_remove_text_from_date
+                                                    }
                                                     className="mt-1 block w-full"
                                                     autoComplete="source_remove_text_from_date"
                                                     placeholder="Enter remove text from date"
@@ -420,7 +439,9 @@ export default function EventCreate({ auth }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.source_remove_text_from_date}
+                                                    message={
+                                                        errors.source_remove_text_from_date
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -434,7 +455,9 @@ export default function EventCreate({ auth }) {
                                                     id="source_date_format"
                                                     type="text"
                                                     name="source_date_format"
-                                                    value={data.source_date_format}
+                                                    value={
+                                                        data.source_date_format
+                                                    }
                                                     className="mt-1 block w-full"
                                                     autoComplete="source_date_format"
                                                     placeholder="Enter source date format"
@@ -448,7 +471,9 @@ export default function EventCreate({ auth }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.source_date_format}
+                                                    message={
+                                                        errors.source_date_format
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -487,7 +512,9 @@ export default function EventCreate({ auth }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.document_title}
+                                                    message={
+                                                        errors.document_title
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -501,7 +528,9 @@ export default function EventCreate({ auth }) {
                                                     id="document_description"
                                                     type="text"
                                                     name="document_description"
-                                                    value={data.document_description}
+                                                    value={
+                                                        data.document_description
+                                                    }
                                                     className="mt-1 block w-full"
                                                     autoComplete="document_description"
                                                     placeholder="Enter document description"
@@ -515,7 +544,9 @@ export default function EventCreate({ auth }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.document_description}
+                                                    message={
+                                                        errors.document_description
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -543,7 +574,9 @@ export default function EventCreate({ auth }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.document_date}
+                                                    message={
+                                                        errors.document_date
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -557,7 +590,9 @@ export default function EventCreate({ auth }) {
                                                     id="document_remove_text_from_date"
                                                     type="text"
                                                     name="document_remove_text_from_date"
-                                                    value={data.document_remove_text_from_date}
+                                                    value={
+                                                        data.document_remove_text_from_date
+                                                    }
                                                     className="mt-1 block w-full"
                                                     autoComplete="document_remove_text_from_date"
                                                     placeholder="Enter remove text from date"
@@ -571,7 +606,9 @@ export default function EventCreate({ auth }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.document_remove_text_from_date}
+                                                    message={
+                                                        errors.document_remove_text_from_date
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -585,7 +622,9 @@ export default function EventCreate({ auth }) {
                                                     id="document_date_format"
                                                     type="text"
                                                     name="document_date_format"
-                                                    value={data.document_date_format}
+                                                    value={
+                                                        data.document_date_format
+                                                    }
                                                     className="mt-1 block w-full"
                                                     autoComplete="document_date_format"
                                                     placeholder="Enter date format"
@@ -599,7 +638,9 @@ export default function EventCreate({ auth }) {
                                                 />
 
                                                 <InputError
-                                                    message={errors.document_date_format}
+                                                    message={
+                                                        errors.document_date_format
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>

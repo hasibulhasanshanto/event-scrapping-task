@@ -33,7 +33,8 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // return $request;
+        return redirect()->route('events.index');
     }
 
     /**

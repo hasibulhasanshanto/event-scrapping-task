@@ -39,6 +39,17 @@ class Event extends Model
         'document_date_format'
     ];
 
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'updated_at' => 'datetime',
+        ];
+    }
 
     /**
      * Get the user that owns event.

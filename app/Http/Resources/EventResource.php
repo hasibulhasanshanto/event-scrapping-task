@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -37,6 +38,7 @@ class EventResource extends JsonResource
             "document_date" => $this->document_date,
             "document_remove_text_from_date" => $this->document_remove_text_from_date,
             "document_date_format" => $this->document_date_format,
+            "updated_at" => Carbon::parse($this->updated_at)->format('d-m-Y H:i A'),
         ];
     }
 }
