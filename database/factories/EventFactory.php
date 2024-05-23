@@ -2,14 +2,15 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-  /**
+    /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
  */
 class EventFactory extends Factory
 {
-      /**
+        /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
@@ -17,13 +18,14 @@ class EventFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id'                        => 1,
+            'user_id'                        => User::whereRole('client')->inRandomOrder()->first()->id,
             'name'                           => fake()->name(),
             'url'                            => fake()->domainName(),
-            'country'                        => fake()->country(),
-            'document'                       => fake()->name(),
-            'source_type'                    => fake()->name(),
+            'country'                        => fake()->randomElement(["Bangladesh","Albania","Canada","United States","United Kingdom"]),
+            'document'                       => fake()->randomElement(["Consultation","Speech","Media Release","Unknown"]),
+            'source_type'                    => fake()->randomElement(["Web Scraping","Query","Unknown"]),
             'reference_selector'             => fake()->company(),
+            'horizon_scanning'               => fake()->randomElement([true, false]),
             'source_container'               => fake()->name(),
             'source_link'                    => fake()->name(),
             'source_title'                   => fake()->title(),

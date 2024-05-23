@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use App\Http\Resources\EventResource;
+use App\Http\Requests\EventFormRequest;
 
 class EventController extends Controller
 {
@@ -31,9 +33,12 @@ class EventController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(EventFormRequest $request)
     {
-        // return $request;
+        $validated = $request->validated();
+        $uid = User::whereRole('client')->inRandomOrder()->first()->id;
+        $validated['user_id'] = $uid;
+        Event::create($validated);
         return redirect()->route('events.index');
     }
 
@@ -58,9 +63,11 @@ class EventController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Event $event)
+    public function update(EventFormRequest $request, Event $event)
     {
-        //
+        $validated = $request->validated();
+        $event->update($validated);
+        return redirect()->route('events.index');
     }
 
     /**
@@ -68,6 +75,7 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        //
+        $event->delete();
+        return redirect()->route('events.index');
     }
 }
