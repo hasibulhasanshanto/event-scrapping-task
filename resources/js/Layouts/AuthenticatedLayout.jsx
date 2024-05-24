@@ -4,12 +4,28 @@ import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
+import { ToastContainer, toast, Bounce } from 'react-toastify';
+import { useEffect } from 'react';
 
-export default function Authenticated({ user, header, children }) {
+export default function Authenticated({ user, alert, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+    useEffect(() => {
+        toast.success(alert, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+        });
+    }, []);
 
     return (
         <div className="min-h-screen bg-gray-100">
+            <ToastContainer />
             <nav className="bg-white border-b border-gray-100">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
@@ -24,6 +40,13 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Dashboard
                                 </NavLink>
+
+                                {user.role === 'author' &&
+                                    <NavLink href={''} >
+                                        Users
+                                    </NavLink>
+                                }
+
                                 <NavLink href={route('events.index')} active={route().current('events.index')}>
                                     Events
                                 </NavLink>

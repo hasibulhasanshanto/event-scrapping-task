@@ -25,8 +25,9 @@ class EventController extends Controller
         $events = $this->eventService->paginateData();
 
         return Inertia::render('Event/Index', [
-            'events' => EventResource::collection($events),
+            'events' => EventResource::collection($events) ?? [],
             'queryParams' => request()->query() ?: null,
+            'success' => session('success'),
         ]);
     }
 
@@ -46,7 +47,7 @@ class EventController extends Controller
         $validated = $request->validated();
         $this->eventService->storeData($validated);
 
-        return redirect()->route('events.index');
+        return redirect()->route('events.index')->with('success', 'Event created successfully!');
     }
 
     /**
@@ -75,7 +76,7 @@ class EventController extends Controller
         $validated = $request->validated();
         $this->eventService->updateData($validated, $event);
 
-        return redirect()->route('events.index');
+        return redirect()->route('events.index')->with('success', 'Event update successfully!');
     }
 
     /**
@@ -84,7 +85,7 @@ class EventController extends Controller
     public function destroy(Event $event)
     {
         $this->eventService->deleteData($event);
-        return redirect()->route('events.index');
+        return redirect()->route('events.index')->with('success', 'Event destroyed successfully!');
     }
 
     /**
@@ -93,6 +94,6 @@ class EventController extends Controller
     public function updateEnabled($id)
     {
         $this->eventService->enableUpdate($id);
-        return redirect()->route('events.index');
+        return redirect()->route('events.index')->with('success', 'Event created successfully!');
     }
 }

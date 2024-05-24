@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Dropdown from "@/Components/Dropdown";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
 import NavLink from "@/Components/NavLink";
@@ -14,12 +13,17 @@ import CheckIcon from "@/Components/Icons/CheckIcon";
 import LoopIcon from "@/Components/Icons/LoopIcon";
 import EditIcon from "@/Components/Icons/EditIcon";
 import CloseCircleIcon from "@/Components/Icons/CloseCircleIcon";
+import { toast, Bounce } from 'react-toastify';
+import Modal from '@/Components/Modal';
+import DangerButton from '@/Components/DangerButton';
+import SecondaryButton from '@/Components/SecondaryButton';
 
-export default function Event({ auth, events, queryParams = null }) {
+export default function Event({ auth, events, queryParams = null, success }) {
     queryParams = queryParams || {};
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [dropId, setDropId] = useState(null);
-    const [allEvents, setAllEvents] = useState(events);
+    const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
 
     const searchFieldChanged = (search, value) => {
         if (value) {
@@ -42,10 +46,22 @@ export default function Event({ auth, events, queryParams = null }) {
     };
 
     const deleteEventHandler = (eventId) => {
-        if (!window.confirm("Are you sure you want to delete this?")) {
-            return;
+        setConfirmingUserDeletion(true);
+        setDeleteId(eventId);
+    };
+
+    const finallyDelete = () => {
+        console.log(deleteId);
+        if (deleteId) {
+            router.delete(route("events.destroy", deleteId));
         }
-        router.delete(route("events.destroy", eventId));
+        closeModal();
+    };
+
+    const closeModal = () => {
+        setDeleteId(null);
+        setConfirmingUserDeletion(false);
+        setIsDropdownOpen(false);
     };
 
     const checkAll = (value) => {
@@ -61,6 +77,20 @@ export default function Event({ auth, events, queryParams = null }) {
         router.post(route("events.update-enabled", eventId));
     };
 
+    const notify = () => {
+        toast.warn('Sorry, Currently is not available', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+        });
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -69,6 +99,7 @@ export default function Event({ auth, events, queryParams = null }) {
                     Events Lists
                 </h2>
             }
+            alert={success}
         >
             <Head title="Events" />
 
@@ -77,6 +108,7 @@ export default function Event({ auth, events, queryParams = null }) {
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="flex flex-col p-5">
                             <div className="-m-1.5 overflow-x-auto">
+                                {/* { success && toast(success)} */}
                                 <div className="p-1.5 min-w-full inline-block align-middle">
                                     <div className="border rounded-lg divide-y divide-gray-200">
                                         <div className="grid grid-cols-3 gap-4 items-center py-3 px-4">
@@ -113,6 +145,7 @@ export default function Event({ auth, events, queryParams = null }) {
                                                         <button
                                                             type="button"
                                                             className="w-full py-2.5 text-xs font-medium text-gray-400 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-0 rounded-md flex justify-center"
+                                                            onClick={notify}
                                                         >
                                                             <DownloadIcon />
                                                         </button>
@@ -121,23 +154,27 @@ export default function Event({ auth, events, queryParams = null }) {
                                                         <button
                                                             type="button"
                                                             className="w-full py-2.5 text-xs font-medium text-gray-400 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-0 rounded-md flex justify-center"
+                                                            onClick={notify}
                                                         >
                                                             <UploadIcon />
                                                         </button>
                                                     </div>
-                                                    <div className="col-span-1">
-                                                        <NavLink
-                                                            href={route(
-                                                                "events.create"
-                                                            )}
-                                                            className="w-full !py-2.5 text-xs font-medium text-white hover:!text-white bg-gray-800 hover:bg-gray-900 focus:!outline-none focus:!ring-0 rounded-md flex items-center !px-3"
-                                                        >
-                                                            <PlusIcon />
-                                                            <span>
-                                                                Add Source
-                                                            </span>
-                                                        </NavLink>
-                                                    </div>
+                                                    {auth.user.role === "author" &&
+                                                        <div className="col-span-1">
+                                                            <NavLink
+                                                                href={route(
+                                                                    "events.create"
+                                                                )}
+                                                                className="w-full !py-2.5 text-xs font-medium text-white hover:!text-white bg-gray-800 hover:bg-gray-900 focus:!outline-none focus:!ring-0 rounded-md flex items-center !px-3"
+                                                            >
+                                                                <PlusIcon />
+                                                                <span>
+                                                                    Add Source
+                                                                </span>
+                                                            </NavLink>
+                                                        </div>
+                                                    }
+
                                                 </div>
                                             </div>
                                         </div>
@@ -196,18 +233,23 @@ export default function Event({ auth, events, queryParams = null }) {
                                                             >
                                                                 Last Updated
                                                             </th>
-                                                            <th
-                                                                scope="col"
-                                                                className="px-6 py-3 text-end text-xs font-medium text-gray-500"
-                                                            >
-                                                                Enabled
-                                                            </th>
-                                                            <th
-                                                                scope="col"
-                                                                className="px-6 py-3 text-center text-xs font-medium text-gray-500"
-                                                            >
-                                                                Action
-                                                            </th>
+                                                            {auth.user.role === "author" &&
+                                                                <>
+                                                                    <th
+                                                                        scope="col"
+                                                                        className="px-6 py-3 text-end text-xs font-medium text-gray-500"
+                                                                    >
+                                                                        Enabled
+                                                                    </th>
+
+                                                                    <th
+                                                                        scope="col"
+                                                                        className="px-6 py-3 text-center text-xs font-medium text-gray-500"
+                                                                    >
+                                                                        Action
+                                                                    </th>
+                                                                </>
+                                                            }
                                                         </tr>
                                                     </thead>
                                                     <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
@@ -253,6 +295,8 @@ export default function Event({ auth, events, queryParams = null }) {
                                                                             event.updated_at
                                                                         }
                                                                     </td>
+                                                                    {auth.user.role === "author" &&
+                                                                        <>
                                                                     <td className="px-6 py-3 whitespace-nowrap text-end text-sm font-medium">
                                                                         <input
                                                                             id={`scanning-${event.id}`}
@@ -354,9 +398,13 @@ export default function Event({ auth, events, queryParams = null }) {
                                                                                 )}
                                                                         </div>
                                                                     </td>
+                                                                    </>}
                                                                 </tr>
                                                             )
                                                         )}
+                                                        {events.data.length === 0 && <tr className="w-full">
+                                                            <td className="flex justify-center px-3 py-3 text-sm font-medium text-gray-800">No data found!</td>
+                                                        </tr>}
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -382,6 +430,25 @@ export default function Event({ auth, events, queryParams = null }) {
                     </div>
                 </div>
             </div>
+            <Modal show={confirmingUserDeletion} onClose={closeModal}>
+                <form className="p-6">
+                    <h2 className="text-lg font-medium text-gray-900">
+                        Are you sure you want to delete this event?
+                    </h2>
+
+                    <p className="mt-1 text-sm text-gray-600">
+                        Once event is deleted, it can't be revert'.
+                    </p>
+
+                    <div className="mt-6 flex justify-end">
+                        <SecondaryButton onClick={closeModal}>Cancel</SecondaryButton>
+
+                        <DangerButton className="ms-3" onClick={e => finallyDelete()}>
+                            Delete Account
+                        </DangerButton>
+                    </div>
+                </form>
+            </Modal>
         </AuthenticatedLayout>
     );
 }
