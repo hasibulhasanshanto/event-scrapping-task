@@ -13,10 +13,10 @@ import CheckIcon from "@/Components/Icons/CheckIcon";
 import LoopIcon from "@/Components/Icons/LoopIcon";
 import EditIcon from "@/Components/Icons/EditIcon";
 import CloseCircleIcon from "@/Components/Icons/CloseCircleIcon";
-import { toast, Bounce } from 'react-toastify';
-import Modal from '@/Components/Modal';
-import DangerButton from '@/Components/DangerButton';
-import SecondaryButton from '@/Components/SecondaryButton';
+import { toast, Bounce } from "react-toastify";
+import Modal from "@/Components/Modal";
+import DangerButton from "@/Components/DangerButton";
+import SecondaryButton from "@/Components/SecondaryButton";
 
 export default function Event({ auth, events, queryParams = null, success }) {
     queryParams = queryParams || {};
@@ -51,7 +51,6 @@ export default function Event({ auth, events, queryParams = null, success }) {
     };
 
     const finallyDelete = () => {
-        console.log(deleteId);
         if (deleteId) {
             router.delete(route("events.destroy", deleteId));
         }
@@ -78,7 +77,7 @@ export default function Event({ auth, events, queryParams = null, success }) {
     };
 
     const notify = () => {
-        toast.warn('Sorry, Currently is not available', {
+        toast.warn("Sorry, Currently is not available", {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -108,7 +107,6 @@ export default function Event({ auth, events, queryParams = null, success }) {
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="flex flex-col p-5">
                             <div className="-m-1.5 overflow-x-auto">
-                                {/* { success && toast(success)} */}
                                 <div className="p-1.5 min-w-full inline-block align-middle">
                                     <div className="border rounded-lg divide-y divide-gray-200">
                                         <div className="grid grid-cols-3 gap-4 items-center py-3 px-4">
@@ -159,7 +157,8 @@ export default function Event({ auth, events, queryParams = null, success }) {
                                                             <UploadIcon />
                                                         </button>
                                                     </div>
-                                                    {auth.user.role === "author" &&
+                                                    {auth.user.role ===
+                                                        "author" && (
                                                         <div className="col-span-1">
                                                             <NavLink
                                                                 href={route(
@@ -173,8 +172,7 @@ export default function Event({ auth, events, queryParams = null, success }) {
                                                                 </span>
                                                             </NavLink>
                                                         </div>
-                                                    }
-
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
@@ -194,7 +192,9 @@ export default function Event({ auth, events, queryParams = null, success }) {
                                                                             e
                                                                         ) =>
                                                                             checkAll(
-                                                                                e.target.checked
+                                                                                e
+                                                                                    .target
+                                                                                    .checked
                                                                             )
                                                                         }
                                                                         id="checkbox-all"
@@ -233,7 +233,8 @@ export default function Event({ auth, events, queryParams = null, success }) {
                                                             >
                                                                 Last Updated
                                                             </th>
-                                                            {auth.user.role === "author" &&
+                                                            {auth.user.role ===
+                                                                "author" && (
                                                                 <>
                                                                     <th
                                                                         scope="col"
@@ -249,7 +250,7 @@ export default function Event({ auth, events, queryParams = null, success }) {
                                                                         Action
                                                                     </th>
                                                                 </>
-                                                            }
+                                                            )}
                                                         </tr>
                                                     </thead>
                                                     <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
@@ -295,116 +296,126 @@ export default function Event({ auth, events, queryParams = null, success }) {
                                                                             event.updated_at
                                                                         }
                                                                     </td>
-                                                                    {auth.user.role === "author" &&
+                                                                    {auth.user
+                                                                        .role ===
+                                                                        "author" && (
                                                                         <>
-                                                                    <td className="px-6 py-3 whitespace-nowrap text-end text-sm font-medium">
-                                                                        <input
-                                                                            id={`scanning-${event.id}`}
-                                                                            checked={
-                                                                                event.horizon_scanning
-                                                                            }
-                                                                            type="checkbox"
-                                                                            className="relative w-[35px] h-[18px] bg-gray-100 border-transparent text-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:ring-gray-900 disabled:opacity-50 disabled:pointer-events-none checked:bg-none checked:text-gray-900 checked:border-gray-900 focus:checked:border-gray-900 before:inline-block before:size-4 before:bg-white checked:before:bg-gray-400 before:translate-x-0 checked:before:translate-x-full before:rounded-full before:shadow before:transform before:ring-0 before:transition before:ease-in-out before:duration-200"
-                                                                            onChange={(
-                                                                                e
-                                                                            ) =>
-                                                                                changeIsEnabled(
-                                                                                    event.id, e
-                                                                                )
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                    <td className="px-6 py-3 whitespace-nowrap text-end text-sm font-medium">
-                                                                        <div className="flex justify-center relative">
-                                                                            <a
-                                                                                onClick={(
-                                                                                    e
-                                                                                ) =>
-                                                                                    dropDownHandler(
-                                                                                        event.id
-                                                                                    )
-                                                                                }
-                                                                                className="flex justify-start"
-                                                                                href="#"
-                                                                            >
-                                                                                <ThreeDotIcon />
-                                                                            </a>
+                                                                            <td className="px-6 py-3 whitespace-nowrap text-end text-sm font-medium">
+                                                                                <input
+                                                                                    id={`scanning-${event.id}`}
+                                                                                    checked={
+                                                                                        event.horizon_scanning
+                                                                                    }
+                                                                                    type="checkbox"
+                                                                                    className="relative w-[35px] h-[18px] bg-gray-100 border-transparent text-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:ring-gray-900 disabled:opacity-50 disabled:pointer-events-none checked:bg-none checked:text-gray-900 checked:border-gray-900 focus:checked:border-gray-900 before:inline-block before:size-4 before:bg-white checked:before:bg-gray-400 before:translate-x-0 checked:before:translate-x-full before:rounded-full before:shadow before:transform before:ring-0 before:transition before:ease-in-out before:duration-200"
+                                                                                    onChange={(
+                                                                                        e
+                                                                                    ) =>
+                                                                                        changeIsEnabled(
+                                                                                            event.id,
+                                                                                            e
+                                                                                        )
+                                                                                    }
+                                                                                />
+                                                                            </td>
+                                                                            <td className="px-6 py-3 whitespace-nowrap text-end text-sm font-medium">
+                                                                                <div className="flex justify-center relative">
+                                                                                    <a
+                                                                                        onClick={(
+                                                                                            e
+                                                                                        ) =>
+                                                                                            dropDownHandler(
+                                                                                                event.id
+                                                                                            )
+                                                                                        }
+                                                                                        className="flex justify-start"
+                                                                                        href="#"
+                                                                                    >
+                                                                                        <ThreeDotIcon />
+                                                                                    </a>
 
-                                                                            {isDropdownOpen &&
-                                                                                dropId ===
-                                                                                    event.id && (
-                                                                                    <div className="absolute -right-[-1rem] mt-[15px] flex h-[7rem] overflow-hidden w-[140px] flex-col rounded-sm border border-stroke dark:border-neutral-900 bg-white dark:bg-neutral-600 z-50">
-                                                                                        <ul className="flex h-auto flex-col overflow-y-auto py-1">
-                                                                                            <li>
-                                                                                                <a
-                                                                                                    href="#"
-                                                                                                    className="flex gap-2 px-3 pb-1 mt-1 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
-                                                                                                >
-                                                                                                    <CheckIcon />
-                                                                                                    <h5 className="text-sm font-normal">
-                                                                                                        Check
-                                                                                                        Selector
-                                                                                                    </h5>
-                                                                                                </a>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <a
-                                                                                                    href="#"
-                                                                                                    className="flex gap-2 px-3 pb-1 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
-                                                                                                >
-                                                                                                    <LoopIcon />
-                                                                                                    <h5 className="text-sm font-normal">
-                                                                                                        Run
-                                                                                                        Crawler
-                                                                                                    </h5>
-                                                                                                </a>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <Link
-                                                                                                    href={route(
-                                                                                                        "events.edit",
-                                                                                                        event.id
-                                                                                                    )}
-                                                                                                    className="flex gap-2 px-3 pb-1 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
-                                                                                                >
-                                                                                                    <EditIcon />
-                                                                                                    <h5 className="text-sm font-normal">
-                                                                                                        Edit
-                                                                                                        Source
-                                                                                                    </h5>
-                                                                                                </Link>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <a
-                                                                                                    onClick={(
-                                                                                                        e
-                                                                                                    ) =>
-                                                                                                        deleteEventHandler(
-                                                                                                            event.id
-                                                                                                        )
-                                                                                                    }
-                                                                                                    href="#"
-                                                                                                    className="flex gap-2 px-3 pb-0 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
-                                                                                                >
-                                                                                                    <CloseCircleIcon />
-                                                                                                    <h5 className="text-sm font-normal">
-                                                                                                        Remove
-                                                                                                        Event
-                                                                                                    </h5>
-                                                                                                </a>
-                                                                                            </li>
-                                                                                        </ul>
-                                                                                    </div>
-                                                                                )}
-                                                                        </div>
-                                                                    </td>
-                                                                    </>}
+                                                                                    {isDropdownOpen &&
+                                                                                        dropId ===
+                                                                                            event.id && (
+                                                                                            <div className="absolute -right-[-1rem] mt-[15px] flex h-[7rem] overflow-hidden w-[140px] flex-col rounded-sm border border-stroke dark:border-neutral-900 bg-white dark:bg-neutral-600 z-50">
+                                                                                                <ul className="flex h-auto flex-col overflow-y-auto py-1">
+                                                                                                    <li>
+                                                                                                        <a
+                                                                                                            href="#"
+                                                                                                            className="flex gap-2 px-3 pb-1 mt-1 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
+                                                                                                        >
+                                                                                                            <CheckIcon />
+                                                                                                            <h5 className="text-sm font-normal">
+                                                                                                                Check
+                                                                                                                Selector
+                                                                                                            </h5>
+                                                                                                        </a>
+                                                                                                    </li>
+                                                                                                    <li>
+                                                                                                        <a
+                                                                                                            href="#"
+                                                                                                            className="flex gap-2 px-3 pb-1 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
+                                                                                                        >
+                                                                                                            <LoopIcon />
+                                                                                                            <h5 className="text-sm font-normal">
+                                                                                                                Run
+                                                                                                                Crawler
+                                                                                                            </h5>
+                                                                                                        </a>
+                                                                                                    </li>
+                                                                                                    <li>
+                                                                                                        <Link
+                                                                                                            href={route(
+                                                                                                                "events.edit",
+                                                                                                                event.id
+                                                                                                            )}
+                                                                                                            className="flex gap-2 px-3 pb-1 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
+                                                                                                        >
+                                                                                                            <EditIcon />
+                                                                                                            <h5 className="text-sm font-normal">
+                                                                                                                Edit
+                                                                                                                Source
+                                                                                                            </h5>
+                                                                                                        </Link>
+                                                                                                    </li>
+                                                                                                    <li>
+                                                                                                        <a
+                                                                                                            onClick={(
+                                                                                                                e
+                                                                                                            ) =>
+                                                                                                                deleteEventHandler(
+                                                                                                                    event.id
+                                                                                                                )
+                                                                                                            }
+                                                                                                            href="#"
+                                                                                                            className="flex gap-2 px-3 pb-0 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
+                                                                                                        >
+                                                                                                            <CloseCircleIcon />
+                                                                                                            <h5 className="text-sm font-normal">
+                                                                                                                Remove
+                                                                                                                Event
+                                                                                                            </h5>
+                                                                                                        </a>
+                                                                                                    </li>
+                                                                                                </ul>
+                                                                                            </div>
+                                                                                        )}
+                                                                                </div>
+                                                                            </td>
+                                                                        </>
+                                                                    )}
                                                                 </tr>
                                                             )
                                                         )}
-                                                        {events.data.length === 0 && <tr className="w-full">
-                                                            <td className="flex justify-center px-3 py-3 text-sm font-medium text-gray-800">No data found!</td>
-                                                        </tr>}
+                                                        {events.data.length ===
+                                                            0 && (
+                                                            <tr className="w-full">
+                                                                <td className="flex justify-center px-3 py-3 text-sm font-medium text-gray-800">
+                                                                    No data
+                                                                    found!
+                                                                </td>
+                                                            </tr>
+                                                        )}
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -441,9 +452,14 @@ export default function Event({ auth, events, queryParams = null, success }) {
                     </p>
 
                     <div className="mt-6 flex justify-end">
-                        <SecondaryButton onClick={closeModal}>Cancel</SecondaryButton>
+                        <SecondaryButton onClick={closeModal}>
+                            Cancel
+                        </SecondaryButton>
 
-                        <DangerButton className="ms-3" onClick={e => finallyDelete()}>
+                        <DangerButton
+                            className="ms-3"
+                            onClick={(e) => finallyDelete()}
+                        >
                             Delete Account
                         </DangerButton>
                     </div>

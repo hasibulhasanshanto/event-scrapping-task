@@ -1,5 +1,5 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, router} from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import SearchIcon from "@/Components/Icons/Search";
 import Pagination from "@/Components/Common/Pagination";
 import ShowingEntries from "@/Components/Common/ShowingEntries";
@@ -14,7 +14,7 @@ export default function user({ auth, users, queryParams = null }) {
             delete queryParams[search];
         }
         queryParams["page"] = 1;
-        router.get(route('users.index'), queryParams);
+        router.get(route("users.index"), queryParams);
     };
 
     const onKeyPress = (search, e) => {
@@ -92,7 +92,9 @@ export default function user({ auth, users, queryParams = null }) {
                                                                             e
                                                                         ) =>
                                                                             checkAll(
-                                                                                e.target.checked
+                                                                                e
+                                                                                    .target
+                                                                                    .checked
                                                                             )
                                                                         }
                                                                         id="checkbox-all"
@@ -168,19 +170,38 @@ export default function user({ auth, users, queryParams = null }) {
                                                                         }
                                                                     </td>
                                                                     <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-
                                                                         {
                                                                             user.email
                                                                         }
                                                                     </td>
                                                                     <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                                                        <span class={"text-xs font-medium me-2 px-2.5 py-0.5 rounded " + (user.role === 'author' ? 'bg-green-100 text-green-800':'bg-yellow-100 text-yellow-800')}>
-                                                                            {user.role}
+                                                                        <span
+                                                                            class={
+                                                                                "text-xs font-medium me-2 px-2.5 py-0.5 rounded " +
+                                                                                (user.role ===
+                                                                                "author"
+                                                                                    ? "bg-green-100 text-green-800"
+                                                                                    : "bg-yellow-100 text-yellow-800")
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                user.role
+                                                                            }
                                                                         </span>
                                                                     </td>
                                                                     <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                                                    <span class={"text-xs font-medium me-2 px-2.5 py-0.5 rounded " + (user.status === 1 ? 'bg-green-100 text-green-800':'bg-red-100 text-red-800')}>
-                                                                            {user.status ? 'Active' : 'Disabled'}
+                                                                        <span
+                                                                            class={
+                                                                                "text-xs font-medium me-2 px-2.5 py-0.5 rounded " +
+                                                                                (user.status ===
+                                                                                1
+                                                                                    ? "bg-green-100 text-green-800"
+                                                                                    : "bg-red-100 text-red-800")
+                                                                            }
+                                                                        >
+                                                                            {user.status
+                                                                                ? "Active"
+                                                                                : "Disabled"}
                                                                         </span>
                                                                     </td>
                                                                     <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
@@ -191,9 +212,15 @@ export default function user({ auth, users, queryParams = null }) {
                                                                 </tr>
                                                             )
                                                         )}
-                                                        {users.data.length === 0 && <tr className="w-full">
-                                                            <td className="flex justify-center px-3 py-3 text-sm font-medium text-gray-800">No data found!</td>
-                                                        </tr>}
+                                                        {users.data.length ===
+                                                            0 && (
+                                                            <tr className="w-full">
+                                                                <td className="flex justify-center px-3 py-3 text-sm font-medium text-gray-800">
+                                                                    No data
+                                                                    found!
+                                                                </td>
+                                                            </tr>
+                                                        )}
                                                     </tbody>
                                                 </table>
                                             </div>

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AuthorRoleCheck;
+use App\Http\Controllers\CrawlController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ProfileController;
 
@@ -41,6 +42,8 @@ Route::middleware('auth')->group(function () {
         Route::put('/events/{event}', 'update')->name('events.update')->middleware('author');
         Route::delete('/events/{event}', 'destroy')->name('events.destroy')->middleware('author');
     });
+
+    Route::get('/crawl', [CrawlController::class, 'getCrawl']);
 });
 
 require __DIR__.'/auth.php';
