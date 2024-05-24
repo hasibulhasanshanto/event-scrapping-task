@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Foundation\Application;
+use App\Http\Middleware\AuthorRoleCheck;
+use App\Http\Middleware\ClientRoleCheck;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
@@ -17,6 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         //
+        $middleware->alias([
+            'author' => AuthorRoleCheck::class,
+            'client' => ClientRoleCheck::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

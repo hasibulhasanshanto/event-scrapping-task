@@ -1,5 +1,6 @@
 <?php
 
+use App\Utils\GlobalConstant;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -16,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('avatar')->default('avatar.png');
-            $table->enum('role', ['author', 'client'])->default('client');
+            $table->enum('role', [GlobalConstant::USER_ROLE_AUTHOR, GlobalConstant::USER_ROLE_CLIENT])->default(GlobalConstant::USER_ROLE_CLIENT);
             $table->boolean('status')->default(true);
             $table->string('password');
             $table->timestamp('last_login_at')->nullable();

@@ -14,5 +14,8 @@ class GlobalConstant {
 
     public const GLOBAL_STORAGE_PATH = '/storage/';
     public const GLOBAL_PUBLIC_PATH = '/app/public/';
+
+    public const USER_ROLE_AUTHOR = 'author';
+    public const USER_ROLE_CLIENT = 'client';
 }
 ?>

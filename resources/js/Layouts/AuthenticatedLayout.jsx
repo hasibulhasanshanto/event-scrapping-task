@@ -42,7 +42,7 @@ export default function Authenticated({ user, alert, header, children }) {
                                 </NavLink>
 
                                 {user.role === 'author' &&
-                                    <NavLink href={''} >
+                                    <NavLink href={route('users.index')} active={route().current('users.index')}>
                                         Users
                                     </NavLink>
                                 }
