@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Event;
-use Illuminate\Http\Request;
+use App\Services\EventService;
 use App\Http\Resources\EventResource;
 use App\Http\Requests\EventFormRequest;
 
 class EventController extends Controller
 {
     /**
+     * Construct property promotion
+     */
+    public function __construct(protected EventService $eventService)
+    {
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $query = Event::query();
-        if (request("search")) {
-            $query->where("name", "like", "%" . request("search") . "%");
-            // $query->OrWhere("country", "like", "%" . request("search") . "%");
-        }
-        $events = $query->orderBy('id', 'desc')->paginate(10)->onEachSide(1);
+        $events = $this->eventService->paginateData();
 
         return Inertia::render('Event/Index', [
             'events' => EventResource::collection($events),
@@ -43,9 +44,8 @@ class EventController extends Controller
     public function store(EventFormRequest $request)
     {
         $validated = $request->validated();
-        $uid = User::whereRole('client')->inRandomOrder()->first()->id;
-        $validated['user_id'] = $uid;
-        Event::create($validated);
+        $this->eventService->storeData($validated);
+
         return redirect()->route('events.index');
     }
 
@@ -73,7 +73,8 @@ class EventController extends Controller
     public function update(EventFormRequest $request, Event $event)
     {
         $validated = $request->validated();
-        $event->update($validated);
+        $this->eventService->updateData($validated, $event);
+
         return redirect()->route('events.index');
     }
 
@@ -82,7 +83,7 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        $event->delete();
+        $this->eventService->deleteData($event);
         return redirect()->route('events.index');
     }
 
@@ -91,10 +92,7 @@ class EventController extends Controller
      */
     public function updateEnabled($id)
     {
-        $event = Event::whereId($id)->first();
-        $event->horizon_scanning = $event->horizon_scanning ? false : true;
-        $event->save();
-
+        $this->eventService->enableUpdate($id);
         return redirect()->route('events.index');
     }
 }
