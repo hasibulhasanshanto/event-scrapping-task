@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Dropdown from "@/Components/Dropdown";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import NavLink from "@/Components/NavLink";
 import SearchIcon from "@/Components/Icons/Search";
 import ThreeDotIcon from "@/Components/Icons/TheeDot";
@@ -10,8 +10,44 @@ import UploadIcon from "@/Components/Icons/Upload";
 import PlusIcon from "@/Components/Icons/Plus";
 import Pagination from "@/Components/Common/Pagination";
 import ShowingEntries from "@/Components/Common/ShowingEntries";
+import CheckIcon from "@/Components/Icons/CheckIcon";
+import LoopIcon from "@/Components/Icons/LoopIcon";
+import EditIcon from "@/Components/Icons/EditIcon";
+import CloseCircleIcon from "@/Components/Icons/CloseCircleIcon";
 
-export default function Event({ auth, events }) {
+export default function Event({ auth, events, queryParams = null, }) {
+    queryParams = queryParams || {};
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [dropId, setDropId] = useState(null);
+
+    const searchFieldChanged = (search, value) => {
+        if (value) {
+          queryParams[search] = value;
+        } else {
+          delete queryParams[search];
+        }
+        delete queryParams['page'];
+
+        router.get(route("events.index"), queryParams);
+    };
+
+    const onKeyPress = (search, e) => {
+        if (e.key !== "Enter") return;
+        searchFieldChanged(search, e.target.value);
+    };
+
+    const dropDownHandler = (dropId) => {
+        setIsDropdownOpen(!isDropdownOpen);
+        setDropId(dropId);
+    };
+
+    const deleteEventHandler = (eventId) => {
+        if (!window.confirm("Are you sure you want to delete this?")) {
+            return;
+        }
+        router.delete(route('events.destroy', eventId));
+    };
+
     const changeIsEnabled = (event) => {
         console.log(event);
     };
@@ -47,8 +83,13 @@ export default function Event({ auth, events }) {
                                                     type="text"
                                                     name="hs-table-with-pagination-search"
                                                     id="hs-table-with-pagination-search"
+                                                    defaultValue={queryParams.name}
                                                     className="py-2.5 px-3 ps-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-0 focus:ring-gray-900 disabled:opacity-50 disabled:pointer-events-none"
-                                                    placeholder="Search"
+                                                    placeholder="Search by name..."
+                                                    onBlur={(e) =>
+                                                        searchFieldChanged("search", e.target.value)
+                                                    }
+                                                    onKeyPress={(e) => onKeyPress("search", e)}
                                                 />
                                                 <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
                                                     <SearchIcon />
@@ -88,176 +129,225 @@ export default function Event({ auth, events }) {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="overflow-hidden">
-                                            <table className="min-w-full divide-y divide-gray-200">
-                                                <thead className="bg-gray-50">
-                                                    <tr>
-                                                        <th
-                                                            scope="col"
-                                                            className="py-3 px-3 pe-0"
-                                                        >
-                                                            <div className="flex items-center h-5">
-                                                                <input
-                                                                    id="hs-table-pagination-checkbox-all"
-                                                                    type="checkbox"
-                                                                    className="border-gray-200 rounded text-gray-900 focus:ring-gray-900"
-                                                                />
-                                                                <label
-                                                                    htmlFor="hs-table-pagination-checkbox-all"
-                                                                    className="sr-only"
-                                                                >
-                                                                    Checkbox
-                                                                </label>
-                                                            </div>
-                                                        </th>
-                                                        <th
-                                                            scope="col"
-                                                            className="px-6 py-3 text-start text-xs font-medium text-gray-500"
-                                                        >
-                                                            Name
-                                                        </th>
-                                                        <th
-                                                            scope="col"
-                                                            className="px-6 py-3 text-start text-xs font-medium text-gray-500"
-                                                        >
-                                                            Country
-                                                        </th>
-                                                        <th
-                                                            scope="col"
-                                                            className="px-6 py-3 text-start text-xs font-medium text-gray-500"
-                                                        >
-                                                            Document
-                                                        </th>
-                                                        <th
-                                                            scope="col"
-                                                            className="px-6 py-3 text-start text-xs font-medium text-gray-500"
-                                                        >
-                                                            Last Updated
-                                                        </th>
-                                                        <th
-                                                            scope="col"
-                                                            className="px-6 py-3 text-end text-xs font-medium text-gray-500"
-                                                        >
-                                                            Enabled
-                                                        </th>
-                                                        <th
-                                                            scope="col"
-                                                            className="px-6 py-3 text-center text-xs font-medium text-gray-500"
-                                                        >
-                                                            Action
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
-                                                    {events.data.map(
-                                                        (event) => (
-                                                            <tr key={event.id}>
-                                                                <td className="py-3 ps-3">
-                                                                    <div className="flex items-center h-5">
-                                                                        <input
-                                                                            id={`hs-table-pagination-checkbox-${event.id}`}
-                                                                            type="checkbox"
-                                                                            className="border-gray-200 rounded text-gray-900 focus:ring-gray-900"
-                                                                        />
-                                                                        <label
-                                                                            htmlFor={`hs-table-pagination-checkbox-${event.id}`}
-                                                                            className="sr-only"
-                                                                        >
-                                                                            Checkbox
-                                                                        </label>
-                                                                    </div>
-                                                                </td>
-                                                                <td className="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                                                    {event.name}
-                                                                </td>
-                                                                <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                                                    {
-                                                                        event.country
-                                                                    }
-                                                                </td>
-                                                                <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                                                    {
-                                                                        event.document
-                                                                    }
-                                                                </td>
-                                                                <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                                                    {
-                                                                        event.updated_at
-                                                                    }
-                                                                </td>
-                                                                <td className="px-6 py-3 whitespace-nowrap text-end text-sm font-medium">
+
+                                        <div className="my-8">
+                                            <div className="">
+                                                <table className="min-w-full divide-y divide-gray-200">
+                                                    <thead className="bg-gray-50">
+                                                        <tr>
+                                                            <th
+                                                                scope="col"
+                                                                className="py-3 px-3 pe-0"
+                                                            >
+                                                                <div className="flex items-center h-5">
                                                                     <input
-                                                                        id={`scanning-${event.id}`}
-                                                                        checked={
-                                                                            event.horizon_scanning
-                                                                        }
+                                                                        id="hs-table-pagination-checkbox-all"
                                                                         type="checkbox"
-                                                                        className="relative w-[35px] h-[18px] bg-gray-100 border-transparent text-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:ring-gray-900 disabled:opacity-50 disabled:pointer-events-none checked:bg-none checked:text-gray-900 checked:border-gray-900 focus:checked:border-gray-900 before:inline-block before:size-4 before:bg-white checked:before:bg-gray-400 before:translate-x-0 checked:before:translate-x-full before:rounded-full before:shadow before:transform before:ring-0 before:transition before:ease-in-out before:duration-200"
-                                                                        onChange={(
-                                                                            e
-                                                                        ) =>
-                                                                            changeIsEnabled(
-                                                                                event
-                                                                            )
-                                                                        }
+                                                                        className="border-gray-200 rounded text-gray-900 focus:ring-gray-900"
                                                                     />
-                                                                </td>
-                                                                <td className="px-6 py-3 whitespace-nowrap text-end text-sm font-medium">
-                                                                    <div className="flex justify-center">
-                                                                        <div className="ms-3">
-                                                                            <Dropdown>
-                                                                                <Dropdown.Trigger className="relative">
-                                                                                    <span className="inline-flex rounded-md">
-                                                                                        <button
-                                                                                            type="button"
-                                                                                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
-                                                                                        >
-                                                                                            <ThreeDotIcon />
-                                                                                        </button>
-                                                                                    </span>
-                                                                                </Dropdown.Trigger>
-
-                                                                                <Dropdown.Content className="absolute z-50">
-                                                                                    <Dropdown.Link
-                                                                                        href={route(
-                                                                                            "profile.edit"
-                                                                                        )}
-                                                                                    >
-                                                                                        Profile
-                                                                                    </Dropdown.Link>
-                                                                                    <Dropdown.Link
-                                                                                        href={route(
-                                                                                            "logout"
-                                                                                        )}
-                                                                                        method="post"
-                                                                                        as="button"
-                                                                                    >
-                                                                                        Log
-                                                                                        Out
-                                                                                    </Dropdown.Link>
-                                                                                </Dropdown.Content>
-                                                                            </Dropdown>
+                                                                    <label
+                                                                        htmlFor="hs-table-pagination-checkbox-all"
+                                                                        className="sr-only"
+                                                                    >
+                                                                        Checkbox
+                                                                    </label>
+                                                                </div>
+                                                            </th>
+                                                            <th
+                                                                scope="col"
+                                                                className="px-6 py-3 text-start text-xs font-medium text-gray-500"
+                                                            >
+                                                                Name
+                                                            </th>
+                                                            <th
+                                                                scope="col"
+                                                                className="px-6 py-3 text-start text-xs font-medium text-gray-500"
+                                                            >
+                                                                Country
+                                                            </th>
+                                                            <th
+                                                                scope="col"
+                                                                className="px-6 py-3 text-start text-xs font-medium text-gray-500"
+                                                            >
+                                                                Document
+                                                            </th>
+                                                            <th
+                                                                scope="col"
+                                                                className="px-6 py-3 text-start text-xs font-medium text-gray-500"
+                                                            >
+                                                                Last Updated
+                                                            </th>
+                                                            <th
+                                                                scope="col"
+                                                                className="px-6 py-3 text-end text-xs font-medium text-gray-500"
+                                                            >
+                                                                Enabled
+                                                            </th>
+                                                            <th
+                                                                scope="col"
+                                                                className="px-6 py-3 text-center text-xs font-medium text-gray-500"
+                                                            >
+                                                                Action
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
+                                                        {events.data.map(
+                                                            (event) => (
+                                                                <tr
+                                                                    key={
+                                                                        event.id
+                                                                    }
+                                                                >
+                                                                    <td className="py-3 ps-3">
+                                                                        <div className="flex items-center h-5">
+                                                                            <input
+                                                                                id={`hs-table-pagination-checkbox-${event.id}`}
+                                                                                type="checkbox"
+                                                                                className="border-gray-200 rounded text-gray-900 focus:ring-gray-900"
+                                                                            />
+                                                                            <label
+                                                                                htmlFor={`hs-table-pagination-checkbox-${event.id}`}
+                                                                                className="sr-only"
+                                                                            >
+                                                                                Checkbox
+                                                                            </label>
                                                                         </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        )
-                                                    )}
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                                    </td>
+                                                                    <td className="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                                                        {
+                                                                            event.name
+                                                                        }
+                                                                    </td>
+                                                                    <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                                                        {
+                                                                            event.country
+                                                                        }
+                                                                    </td>
+                                                                    <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                                                        {
+                                                                            event.document
+                                                                        }
+                                                                    </td>
+                                                                    <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                                                        {
+                                                                            event.updated_at
+                                                                        }
+                                                                    </td>
+                                                                    <td className="px-6 py-3 whitespace-nowrap text-end text-sm font-medium">
+                                                                        <input
+                                                                            id={`scanning-${event.id}`}
+                                                                            checked={
+                                                                                event.horizon_scanning
+                                                                            }
+                                                                            type="checkbox"
+                                                                            className="relative w-[35px] h-[18px] bg-gray-100 border-transparent text-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:ring-gray-900 disabled:opacity-50 disabled:pointer-events-none checked:bg-none checked:text-gray-900 checked:border-gray-900 focus:checked:border-gray-900 before:inline-block before:size-4 before:bg-white checked:before:bg-gray-400 before:translate-x-0 checked:before:translate-x-full before:rounded-full before:shadow before:transform before:ring-0 before:transition before:ease-in-out before:duration-200"
+                                                                            onChange={(
+                                                                                e
+                                                                            ) =>
+                                                                                changeIsEnabled(
+                                                                                    event
+                                                                                )
+                                                                            }
+                                                                        />
+                                                                    </td>
+                                                                    <td className="px-6 py-3 whitespace-nowrap text-end text-sm font-medium">
+                                                                        <div className="flex justify-center relative">
+                                                                            <a
+                                                                                onClick={(
+                                                                                    e
+                                                                                ) =>
+                                                                                    dropDownHandler(
+                                                                                        event.id
+                                                                                    )
+                                                                                }
+                                                                                className="flex justify-start"
+                                                                                href="#"
+                                                                            >
+                                                                                <ThreeDotIcon />
+                                                                            </a>
 
-                                        {/* Table pagination  */}
-                                        <div className="flex items-center justify-between py-4 px-4">
-                                            {/* Showing entries component */}
-                                            <ShowingEntries
-                                                meta={events.meta}
-                                            />
+                                                                            {isDropdownOpen &&
+                                                                                dropId ===
+                                                                                    event.id && (
+                                                                                    <div className="absolute -right-[-1rem] mt-[15px] flex h-[7rem] overflow-hidden w-[140px] flex-col rounded-sm border border-stroke dark:border-neutral-900 bg-white dark:bg-neutral-600 z-50">
+                                                                                        <ul className="flex h-auto flex-col overflow-y-auto py-1">
+                                                                                            <li>
+                                                                                                <a
+                                                                                                    href="#"
+                                                                                                    className="flex gap-2 px-3 pb-1 mt-1 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
+                                                                                                >
+                                                                                                    <CheckIcon />
+                                                                                                    <h5 className="text-sm font-normal">
+                                                                                                        Check
+                                                                                                        Selector
+                                                                                                    </h5>
+                                                                                                </a>
+                                                                                            </li>
+                                                                                            <li>
+                                                                                                <a
+                                                                                                    href="#"
+                                                                                                    className="flex gap-2 px-3 pb-1 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
+                                                                                                >
+                                                                                                    <LoopIcon />
+                                                                                                    <h5 className="text-sm font-normal">
+                                                                                                        Run
+                                                                                                        Crawler
+                                                                                                    </h5>
+                                                                                                </a>
+                                                                                            </li>
+                                                                                            <li>
+                                                                                                <Link
+                                                                                                    href={route(
+                                                                                                        "events.edit", event.id
+                                                                                                    )}
+                                                                                                    className="flex gap-2 px-3 pb-1 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
+                                                                                                >
+                                                                                                    <EditIcon />
+                                                                                                    <h5 className="text-sm font-normal">
+                                                                                                        Edit
+                                                                                                        Source
+                                                                                                    </h5>
+                                                                                                </Link>
+                                                                                            </li>
+                                                                                            <li>
+                                                                                            <a
+                                                                                                onClick={e=> deleteEventHandler(event.id)}
+                                                                                                    href="#"
+                                                                                                    className="flex gap-2 px-3 pb-0 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
+                                                                                                >
+                                                                                                    <CloseCircleIcon />
+                                                                                                    <h5 className="text-sm font-normal">
+                                                                                                        Remove
+                                                                                                        Event
+                                                                                                    </h5>
+                                                                                                </a>
+                                                                                            </li>
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                )}
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            )
+                                                        )}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <hr />
 
-                                            {/* pagination component */}
-                                            <Pagination
-                                                links={events.meta.links}
-                                            />
+                                            {/* Table pagination  */}
+                                            <div className="flex items-center justify-between py-4 px-4 z-10">
+                                                {/* Showing entries component */}
+                                                <ShowingEntries
+                                                    meta={events.meta}
+                                                />
+
+                                                {/* pagination component */}
+                                                <Pagination
+                                                    links={events.meta.links}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

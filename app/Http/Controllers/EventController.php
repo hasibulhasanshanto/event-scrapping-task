@@ -16,9 +16,16 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::orderBy('id', 'desc')->paginate(10)->onEachSide(1);
+        $query = Event::query();
+        if (request("search")) {
+            $query->where("name", "like", "%" . request("search") . "%");
+            // $query->OrWhere("country", "like", "%" . request("search") . "%");
+        }
+        $events = $query->orderBy('id', 'desc')->paginate(10)->onEachSide(1);
+
         return Inertia::render('Event/Index', [
             'events' => EventResource::collection($events),
+            'queryParams' => request()->query() ?: null,
         ]);
     }
 
