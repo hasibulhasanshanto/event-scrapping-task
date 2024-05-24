@@ -15,19 +15,19 @@ import LoopIcon from "@/Components/Icons/LoopIcon";
 import EditIcon from "@/Components/Icons/EditIcon";
 import CloseCircleIcon from "@/Components/Icons/CloseCircleIcon";
 
-export default function Event({ auth, events, queryParams = null, }) {
+export default function Event({ auth, events, queryParams = null }) {
     queryParams = queryParams || {};
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [dropId, setDropId] = useState(null);
+    const [allEvents, setAllEvents] = useState(events);
 
     const searchFieldChanged = (search, value) => {
         if (value) {
-          queryParams[search] = value;
+            queryParams[search] = value;
         } else {
-          delete queryParams[search];
+            delete queryParams[search];
         }
-        delete queryParams['page'];
-
+        queryParams["page"] = 1;
         router.get(route("events.index"), queryParams);
     };
 
@@ -45,11 +45,20 @@ export default function Event({ auth, events, queryParams = null, }) {
         if (!window.confirm("Are you sure you want to delete this?")) {
             return;
         }
-        router.delete(route('events.destroy', eventId));
+        router.delete(route("events.destroy", eventId));
     };
 
-    const changeIsEnabled = (event) => {
-        console.log(event);
+    const checkAll = (value) => {
+        let checkboxes = document.getElementsByClassName("table-checkbox");
+        for (let i = 0, n = checkboxes.length; i < n; i++) {
+            checkboxes[i].checked = value;
+        }
+    };
+
+    const changeIsEnabled = (eventId, e) => {
+        e.preventDefault();
+        // console.log(e.target.checked);
+        router.post(route("events.update-enabled", eventId));
     };
 
     return (
@@ -57,7 +66,7 @@ export default function Event({ auth, events, queryParams = null, }) {
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Events
+                    Events Lists
                 </h2>
             }
         >
@@ -66,10 +75,6 @@ export default function Event({ auth, events, queryParams = null, }) {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900 text-lg font-medium">
-                            Events List
-                        </div>
-
                         <div className="flex flex-col p-5">
                             <div className="-m-1.5 overflow-x-auto">
                                 <div className="p-1.5 min-w-full inline-block align-middle">
@@ -83,13 +88,20 @@ export default function Event({ auth, events, queryParams = null, }) {
                                                     type="text"
                                                     name="hs-table-with-pagination-search"
                                                     id="hs-table-with-pagination-search"
-                                                    defaultValue={queryParams.name}
+                                                    defaultValue={
+                                                        queryParams.name
+                                                    }
                                                     className="py-2.5 px-3 ps-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-0 focus:ring-gray-900 disabled:opacity-50 disabled:pointer-events-none"
                                                     placeholder="Search by name..."
                                                     onBlur={(e) =>
-                                                        searchFieldChanged("search", e.target.value)
+                                                        searchFieldChanged(
+                                                            "search",
+                                                            e.target.value
+                                                        )
                                                     }
-                                                    onKeyPress={(e) => onKeyPress("search", e)}
+                                                    onKeyPress={(e) =>
+                                                        onKeyPress("search", e)
+                                                    }
                                                 />
                                                 <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
                                                     <SearchIcon />
@@ -141,12 +153,19 @@ export default function Event({ auth, events, queryParams = null, }) {
                                                             >
                                                                 <div className="flex items-center h-5">
                                                                     <input
-                                                                        id="hs-table-pagination-checkbox-all"
+                                                                        onClick={(
+                                                                            e
+                                                                        ) =>
+                                                                            checkAll(
+                                                                                e.target.checked
+                                                                            )
+                                                                        }
+                                                                        id="checkbox-all"
                                                                         type="checkbox"
                                                                         className="border-gray-200 rounded text-gray-900 focus:ring-gray-900"
                                                                     />
                                                                     <label
-                                                                        htmlFor="hs-table-pagination-checkbox-all"
+                                                                        htmlFor="checkbox-all"
                                                                         className="sr-only"
                                                                     >
                                                                         Checkbox
@@ -202,12 +221,12 @@ export default function Event({ auth, events, queryParams = null, }) {
                                                                     <td className="py-3 ps-3">
                                                                         <div className="flex items-center h-5">
                                                                             <input
-                                                                                id={`hs-table-pagination-checkbox-${event.id}`}
+                                                                                id={`table-checkbox-${event.id}`}
                                                                                 type="checkbox"
-                                                                                className="border-gray-200 rounded text-gray-900 focus:ring-gray-900"
+                                                                                className="table-checkbox border-gray-200 rounded text-gray-900 focus:ring-gray-900"
                                                                             />
                                                                             <label
-                                                                                htmlFor={`hs-table-pagination-checkbox-${event.id}`}
+                                                                                htmlFor={`table-checkbox-${event.id}`}
                                                                                 className="sr-only"
                                                                             >
                                                                                 Checkbox
@@ -246,7 +265,7 @@ export default function Event({ auth, events, queryParams = null, }) {
                                                                                 e
                                                                             ) =>
                                                                                 changeIsEnabled(
-                                                                                    event
+                                                                                    event.id, e
                                                                                 )
                                                                             }
                                                                         />
@@ -299,7 +318,8 @@ export default function Event({ auth, events, queryParams = null, }) {
                                                                                             <li>
                                                                                                 <Link
                                                                                                     href={route(
-                                                                                                        "events.edit", event.id
+                                                                                                        "events.edit",
+                                                                                                        event.id
                                                                                                     )}
                                                                                                     className="flex gap-2 px-3 pb-1 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
                                                                                                 >
@@ -311,8 +331,14 @@ export default function Event({ auth, events, queryParams = null, }) {
                                                                                                 </Link>
                                                                                             </li>
                                                                                             <li>
-                                                                                            <a
-                                                                                                onClick={e=> deleteEventHandler(event.id)}
+                                                                                                <a
+                                                                                                    onClick={(
+                                                                                                        e
+                                                                                                    ) =>
+                                                                                                        deleteEventHandler(
+                                                                                                            event.id
+                                                                                                        )
+                                                                                                    }
                                                                                                     href="#"
                                                                                                     className="flex gap-2 px-3 pb-0 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
                                                                                                 >

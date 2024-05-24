@@ -85,4 +85,16 @@ class EventController extends Controller
         $event->delete();
         return redirect()->route('events.index');
     }
+
+    /**
+     * Display the specified resource.
+     */
+    public function updateEnabled($id)
+    {
+        $event = Event::whereId($id)->first();
+        $event->horizon_scanning = $event->horizon_scanning ? false : true;
+        $event->save();
+
+        return redirect()->route('events.index');
+    }
 }

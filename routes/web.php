@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::post('/update-enabled/{id}', [EventController::class, 'updateEnabled'])->name('events.update-enabled');
     Route::resource('/events', EventController::class);
 });
 
