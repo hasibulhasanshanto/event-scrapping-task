@@ -7,7 +7,7 @@ use Symfony\Component\Panther\Client;
 
 class CrawlController extends Controller
 {
-    public function getCrawl()
+    public function getCrawl(Request $request)
     {
         $client = Client::createChromeClient();
 
@@ -21,7 +21,9 @@ class CrawlController extends Controller
         // Alternatively, wait for an element to be visible
         $crawler = $client->waitForVisibility('#installing-the-framework');
 
-        echo $crawler->filter('#installing-the-framework')->text();
+        $crawler->filter('#installing-the-framework')->text();
         $client->takeScreenshot('screen.png');
+
+        dd($crawler);
     }
 }

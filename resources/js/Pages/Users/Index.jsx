@@ -176,7 +176,7 @@ export default function user({ auth, users, queryParams = null }) {
                                                                     </td>
                                                                     <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                                                         <span
-                                                                            class={
+                                                                            className={
                                                                                 "text-xs font-medium me-2 px-2.5 py-0.5 rounded " +
                                                                                 (user.role ===
                                                                                 "author"
@@ -191,7 +191,7 @@ export default function user({ auth, users, queryParams = null }) {
                                                                     </td>
                                                                     <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                                                         <span
-                                                                            class={
+                                                                            className={
                                                                                 "text-xs font-medium me-2 px-2.5 py-0.5 rounded " +
                                                                                 (user.status ===
                                                                                 1
