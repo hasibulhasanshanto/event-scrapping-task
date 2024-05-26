@@ -26,9 +26,9 @@ return new class extends Migration
             $table->string('source_link');
             $table->string('source_title');
             $table->string('source_description')->nullable();
-            $table->string('source_date');
+            $table->string('source_date')->nullable();
             $table->string('source_remove_text_from_date')->nullable();
-            $table->string('source_date_format');
+            $table->string('source_date_format')->nullable();
 
             $table->string('document_title')->nullable();
             $table->string('document_description')->nullable();

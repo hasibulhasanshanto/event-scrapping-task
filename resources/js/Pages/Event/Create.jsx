@@ -124,6 +124,7 @@ export default function EventCreate({ auth }) {
                                                     "Canada",
                                                     "United States",
                                                     "United Kingdom",
+                                                    "Germany",
                                                 ]}
                                                 selectLabel={"Select Country"}
                                                 id="country"

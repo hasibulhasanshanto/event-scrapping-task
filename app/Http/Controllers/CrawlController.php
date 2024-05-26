@@ -3,34 +3,33 @@
 namespace App\Http\Controllers;
 
 use Throwable;
-use App\Models\Event;
 use Illuminate\Bus\Batch;
 use App\Jobs\EventCrawler;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
 
 class CrawlController extends Controller
 {
-    public function checkSelector()
+    public function checkSelector(string $eventId): JsonResponse
     {
         // EventCrawler::dispatch();
-
         $batch = Bus::batch([
-            new EventCrawler(),
+            new EventCrawler($eventId),
         ])->then(function (Batch $batch) {
             Log::info('Success', $batch);
+            return true;
         })->catch(function (Batch $batch, Throwable $e) {
             Log::error('Event creation went wrong'. $e);
+            return false;
         })->dispatch();
 
-        return "Job in progress, id: " . $batch->id;
+        return response()->json(['success' => 'Event added to job', 'batchId' => $batch->id]);
     }
 
-    public function observeBatch($batchId)
+    public function observeBatch(string $batchId): JsonResponse
     {
         $batch = Bus::findBatch($batchId);
-        // $batch->progress();
-        dd($batch);
+        return response()->json(['success' => 'Getting job batch data', 'batch' => $batch, 'progress' => $batch->progress()]);
     }
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
 import NavLink from "@/Components/NavLink";
@@ -17,6 +17,7 @@ import { toast, Bounce } from "react-toastify";
 import Modal from "@/Components/Modal";
 import DangerButton from "@/Components/DangerButton";
 import SecondaryButton from "@/Components/SecondaryButton";
+import Spinner from "@/Components/Icons/Spinner";
 
 export default function Event({ auth, events, queryParams = null, success }) {
     queryParams = queryParams || {};
@@ -24,6 +25,8 @@ export default function Event({ auth, events, queryParams = null, success }) {
     const [dropId, setDropId] = useState(null);
     const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
+    const [eventId, setEventId] = useState(null);
+    const [jobStage, setJobStage] = useState("processing");
 
     const searchFieldChanged = (search, value) => {
         if (value) {
@@ -88,6 +91,37 @@ export default function Event({ auth, events, queryParams = null, success }) {
             theme: "light",
             transition: Bounce,
         });
+    };
+
+    const checkValidate = (eventId, e) => {
+        e.preventDefault();
+        fetch(`/check-validate/${eventId}`)
+            .then((response) => response.json())
+            .then((data) => {
+                setEventId(eventId);
+                getJobBatchData(data?.batchId);
+                setIsDropdownOpen(false);
+            })
+            .catch((error) => console.error(error));
+    };
+
+    const getJobBatchData = (batchId) => {
+        fetch(`/observe-batch/${batchId}`)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data?.batch?.failedJobs > 0) {
+                    setJobStage("failed");
+                    return;
+                }
+                if (data?.progress === 100) {
+                    setJobStage("success");
+                    return;
+                }
+                setTimeout(() => {
+                    getJobBatchData(batchId);
+                }, 20000);
+            })
+            .catch((error) => console.error(error));
     };
 
     return (
@@ -157,6 +191,7 @@ export default function Event({ auth, events, queryParams = null, success }) {
                                                             <UploadIcon />
                                                         </button>
                                                     </div>
+
                                                     {auth.user.role ===
                                                         "author" && (
                                                         <div className="col-span-1">
@@ -318,90 +353,148 @@ export default function Event({ auth, events, queryParams = null, success }) {
                                                                                     }
                                                                                 />
                                                                             </td>
-                                                                            <td className="px-6 py-3 whitespace-nowrap text-end text-sm font-medium">
-                                                                                <div className="flex justify-center relative">
-                                                                                    <a
-                                                                                        onClick={(
-                                                                                            e
-                                                                                        ) =>
-                                                                                            dropDownHandler(
-                                                                                                event.id
-                                                                                            )
-                                                                                        }
-                                                                                        className="flex justify-start"
-                                                                                        href="#"
-                                                                                    >
-                                                                                        <ThreeDotIcon />
-                                                                                    </a>
+                                                                            {eventId ===
+                                                                                event.id &&
+                                                                                jobStage ===
+                                                                                    "processing" && (
+                                                                                    <td className="px-6 py-3 whitespace-nowrap text-center">
+                                                                                        <button
+                                                                                            disabled
+                                                                                            type="button"
+                                                                                            className="py-1 px-2 text-sm font-medium text-gray-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100 focus:z-10 focus:ring-4 focus:outline-none"
+                                                                                        >
+                                                                                            Processing
+                                                                                            <Spinner />
+                                                                                        </button>
+                                                                                    </td>
+                                                                                )}
+                                                                            {eventId ===
+                                                                                event.id &&
+                                                                                jobStage ===
+                                                                                    "failed" && (
+                                                                                    <td className="px-6 py-3 whitespace-nowrap text-center">
+                                                                                        <button
+                                                                                            type="button"
+                                                                                            className="px-3 py-1 text-xs font-medium text-center text-white bg-red-700 rounded-md hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300"
+                                                                                        >
+                                                                                            Failed
+                                                                                        </button>
+                                                                                    </td>
+                                                                                )}
+                                                                            {eventId ===
+                                                                                event.id &&
+                                                                                jobStage ===
+                                                                                    "success" && (
+                                                                                    <td className="px-6 py-3 whitespace-nowrap text-center">
+                                                                                        <Link
+                                                                                            url={
+                                                                                                "#"
+                                                                                            }
+                                                                                            type="button"
+                                                                                            className="py-1 px-2 text-sm font-medium text-gray-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100focus:ring-4 focus:outline-none focus:ring-red-300"
+                                                                                        >
+                                                                                            Details
+                                                                                        </Link>
+                                                                                    </td>
+                                                                                )}
+                                                                            {eventId !==
+                                                                                event.id && (
+                                                                                <td
+                                                                                    id={`table-action-column-${event.id}`}
+                                                                                    className="px-6 py-3 whitespace-nowrap text-end text-sm font-medium"
+                                                                                >
+                                                                                    <div className="flex justify-center relative">
+                                                                                        <a
+                                                                                            onClick={(
+                                                                                                e
+                                                                                            ) =>
+                                                                                                dropDownHandler(
+                                                                                                    event.id
+                                                                                                )
+                                                                                            }
+                                                                                            className="flex justify-start"
+                                                                                            href="#"
+                                                                                        >
+                                                                                            <ThreeDotIcon />
+                                                                                        </a>
 
-                                                                                    {isDropdownOpen &&
-                                                                                        dropId ===
-                                                                                            event.id && (
-                                                                                            <div className="absolute -right-[-1rem] mt-[15px] flex h-[7rem] overflow-hidden w-[140px] flex-col rounded-sm border border-stroke dark:border-neutral-900 bg-white dark:bg-neutral-600 z-50">
-                                                                                                <ul className="flex h-auto flex-col overflow-y-auto py-1">
-                                                                                                    <li>
-                                                                                                        <a
-                                                                                                            href="#"
-                                                                                                            className="flex gap-2 px-3 pb-1 mt-1 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
-                                                                                                        >
-                                                                                                            <CheckIcon />
-                                                                                                            <h5 className="text-sm font-normal">
-                                                                                                                Check
-                                                                                                                Selector
-                                                                                                            </h5>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <a
-                                                                                                            href="#"
-                                                                                                            className="flex gap-2 px-3 pb-1 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
-                                                                                                        >
-                                                                                                            <LoopIcon />
-                                                                                                            <h5 className="text-sm font-normal">
-                                                                                                                Run
-                                                                                                                Crawler
-                                                                                                            </h5>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <Link
-                                                                                                            href={route(
-                                                                                                                "events.edit",
-                                                                                                                event.id
-                                                                                                            )}
-                                                                                                            className="flex gap-2 px-3 pb-1 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
-                                                                                                        >
-                                                                                                            <EditIcon />
-                                                                                                            <h5 className="text-sm font-normal">
-                                                                                                                Edit
-                                                                                                                Source
-                                                                                                            </h5>
-                                                                                                        </Link>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <a
-                                                                                                            onClick={(
-                                                                                                                e
-                                                                                                            ) =>
-                                                                                                                deleteEventHandler(
+                                                                                        {isDropdownOpen &&
+                                                                                            dropId ===
+                                                                                                event.id && (
+                                                                                                <div className="absolute -right-[-1rem] mt-[15px] flex h-[7rem] overflow-hidden w-[140px] flex-col rounded-sm border border-stroke dark:border-neutral-900 bg-white dark:bg-neutral-600 z-50">
+                                                                                                    <ul className="flex h-auto flex-col overflow-y-auto py-1">
+                                                                                                        <li>
+                                                                                                            <Link
+                                                                                                                onClick={(
+                                                                                                                    e
+                                                                                                                ) =>
+                                                                                                                    checkValidate(
+                                                                                                                        event.id,
+                                                                                                                        e
+                                                                                                                    )
+                                                                                                                }
+                                                                                                                className="flex gap-2 px-3 pb-1 mt-1 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
+                                                                                                            >
+                                                                                                                <CheckIcon />
+                                                                                                                <h5 className="text-sm font-normal">
+                                                                                                                    Check
+                                                                                                                    Selector
+                                                                                                                </h5>
+                                                                                                            </Link>
+                                                                                                        </li>
+
+                                                                                                        <li>
+                                                                                                            <a
+                                                                                                                href="#"
+                                                                                                                className="flex gap-2 px-3 pb-1 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
+                                                                                                            >
+                                                                                                                <LoopIcon />
+                                                                                                                <h5 className="text-sm font-normal">
+                                                                                                                    Run
+                                                                                                                    Crawler
+                                                                                                                </h5>
+                                                                                                            </a>
+                                                                                                        </li>
+                                                                                                        <li>
+                                                                                                            <Link
+                                                                                                                href={route(
+                                                                                                                    "events.edit",
                                                                                                                     event.id
-                                                                                                                )
-                                                                                                            }
-                                                                                                            href="#"
-                                                                                                            className="flex gap-2 px-3 pb-0 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
-                                                                                                        >
-                                                                                                            <CloseCircleIcon />
-                                                                                                            <h5 className="text-sm font-normal">
-                                                                                                                Remove
-                                                                                                                Event
-                                                                                                            </h5>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                </ul>
-                                                                                            </div>
-                                                                                        )}
-                                                                                </div>
-                                                                            </td>
+                                                                                                                )}
+                                                                                                                className="flex gap-2 px-3 pb-1 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
+                                                                                                            >
+                                                                                                                <EditIcon />
+                                                                                                                <h5 className="text-sm font-normal">
+                                                                                                                    Edit
+                                                                                                                    Source
+                                                                                                                </h5>
+                                                                                                            </Link>
+                                                                                                        </li>
+                                                                                                        <li>
+                                                                                                            <a
+                                                                                                                onClick={(
+                                                                                                                    e
+                                                                                                                ) =>
+                                                                                                                    deleteEventHandler(
+                                                                                                                        event.id
+                                                                                                                    )
+                                                                                                                }
+                                                                                                                href="#"
+                                                                                                                className="flex gap-2 px-3 pb-0 items-center hover:text-indigo-600 hover:hover:text-indigo-400"
+                                                                                                            >
+                                                                                                                <CloseCircleIcon />
+                                                                                                                <h5 className="text-sm font-normal">
+                                                                                                                    Remove
+                                                                                                                    Event
+                                                                                                                </h5>
+                                                                                                            </a>
+                                                                                                        </li>
+                                                                                                    </ul>
+                                                                                                </div>
+                                                                                            )}
+                                                                                    </div>
+                                                                                </td>
+                                                                            )}
                                                                         </>
                                                                     )}
                                                                 </tr>

@@ -124,6 +124,9 @@ export default function EventEdit({ auth, event }) {
                                                     "Bangladesh",
                                                     "Albania",
                                                     "Canada",
+                                                    "United States",
+                                                    "United Kingdom",
+                                                    "Germany",
                                                 ]}
                                                 selectLabel={"Select Country"}
                                                 id="country"

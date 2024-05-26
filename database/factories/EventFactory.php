@@ -21,7 +21,7 @@ class EventFactory extends Factory
             'user_id'                        => User::whereRole('client')->inRandomOrder()->first()->id,
             'name'                           => fake()->name(),
             'url'                            => fake()->domainName(),
-            'country'                        => fake()->randomElement(["Bangladesh","Albania","Canada","United States","United Kingdom"]),
+            'country'                        => fake()->randomElement(["Bangladesh","Albania","Canada","United States","United Kingdom", "Germany"]),
             'document'                       => fake()->randomElement(["Consultation","Speech","Media Release","Unknown"]),
             'source_type'                    => fake()->randomElement(["Web Scraping","Query","Unknown"]),
             'reference_selector'             => fake()->company(),
@@ -33,11 +33,6 @@ class EventFactory extends Factory
             'source_date'                    => fake()->city(),
             'source_remove_text_from_date'   => fake()->city(),
             'source_date_format'             => fake()->city(),
-            'document_title'                 => fake()->title(),
-            'document_description'           => fake()->sentence(),
-            'document_date'                  => fake()->city(),
-            'document_remove_text_from_date' => fake()->city(),
-            'document_date_format'           => fake()->city(),
         ];
     }
 }

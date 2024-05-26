@@ -43,8 +43,8 @@ Route::middleware('auth')->group(function () {
         Route::delete('/events/{event}', 'destroy')->name('events.destroy')->middleware('author');
     });
 
-    Route::get('/crawl', [CrawlController::class, 'getCrawl']);
-    Route::get('/observe-batch/{batchId}', [CrawlController::class, 'observeBatch']);
+    Route::get('/check-validate/{eventId}', [CrawlController::class, 'checkSelector'])->name('check.validator')->middleware('author');
+    Route::get('/observe-batch/{batchId}', [CrawlController::class, 'observeBatch'])->middleware('author');
 });
 
 require __DIR__.'/auth.php';
