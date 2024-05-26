@@ -27,6 +27,7 @@ class EventController extends Controller
         return Inertia::render('Event/Index', [
             'events' => EventResource::collection($events) ?? [],
             'queryParams' => request()->query() ?: null,
+            'searchInput' => request("search"),
             'success' => session('success'),
         ]);
     }

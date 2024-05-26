@@ -19,7 +19,7 @@ import DangerButton from "@/Components/DangerButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import Spinner from "@/Components/Icons/Spinner";
 
-export default function Event({ auth, events, queryParams = null, success }) {
+export default function Event({ auth, events, queryParams = null, searchInput, success }) {
     queryParams = queryParams || {};
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [dropId, setDropId] = useState(null);
@@ -154,7 +154,7 @@ export default function Event({ auth, events, queryParams = null, success }) {
                                                     name="hs-table-with-pagination-search"
                                                     id="hs-table-with-pagination-search"
                                                     defaultValue={
-                                                        queryParams.name
+                                                        searchInput
                                                     }
                                                     className="py-2.5 px-3 ps-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-0 focus:ring-gray-900 disabled:opacity-50 disabled:pointer-events-none"
                                                     placeholder="Search by name..."

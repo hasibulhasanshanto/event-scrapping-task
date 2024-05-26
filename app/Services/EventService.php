@@ -27,12 +27,14 @@ class EventService
             $query = $this->model::query();
             if (request("search")) {
                 $query->where("name", "like", "%" . request("search") . "%");
-                // $query->OrWhere("country", "like", "%" . request("search") . "%");
             }
             if(auth()->user()->role == 'client'){
                 $query->where('user_id', auth()->id());
             }
-            return $query->orderBy('id', 'desc')->paginate(10)->onEachSide(1);
+            return $query->orderBy('id', 'desc')
+            ->paginate(10)
+            ->withQueryString()
+            ->onEachSide(1);
         } catch (Exception $e) {
             Log::error('Something went wrong'. $e->getMessage());
         }
