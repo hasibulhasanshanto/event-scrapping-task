@@ -43,7 +43,8 @@ Route::middleware('auth')->group(function () {
         Route::delete('/events/{event}', 'destroy')->name('events.destroy')->middleware('author');
     });
 
-    Route::post('/crawl', [CrawlController::class, 'getCrawl']);
+    Route::get('/crawl', [CrawlController::class, 'getCrawl']);
+    Route::get('/observe-batch/{batchId}', [CrawlController::class, 'observeBatch']);
 });
 
 require __DIR__.'/auth.php';

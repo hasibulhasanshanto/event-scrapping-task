@@ -2,28 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use Throwable;
+use App\Models\Event;
+use Illuminate\Bus\Batch;
+use App\Jobs\EventCrawler;
 use Illuminate\Http\Request;
-use Symfony\Component\Panther\Client;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Log;
 
 class CrawlController extends Controller
 {
-    public function getCrawl(Request $request)
+    public function checkSelector()
     {
-        $client = Client::createChromeClient();
+        // EventCrawler::dispatch();
 
-        // $client = Client::createFirefoxClient();
+        $batch = Bus::batch([
+            new EventCrawler(),
+        ])->then(function (Batch $batch) {
+            Log::info('Success', $batch);
+        })->catch(function (Batch $batch, Throwable $e) {
+            Log::error('Event creation went wrong'. $e);
+        })->dispatch();
 
-        $client->request('GET', 'https://api-platform.com');
-        $client->clickLink('Getting started');
+        return "Job in progress, id: " . $batch->id;
+    }
 
-        // Wait for an element to be present in the DOM (even if hidden)
-        $crawler = $client->waitFor('#installing-the-framework');
-        // Alternatively, wait for an element to be visible
-        $crawler = $client->waitForVisibility('#installing-the-framework');
-
-        $crawler->filter('#installing-the-framework')->text();
-        $client->takeScreenshot('screen.png');
-
-        dd($crawler);
+    public function observeBatch($batchId)
+    {
+        $batch = Bus::findBatch($batchId);
+        // $batch->progress();
+        dd($batch);
     }
 }
