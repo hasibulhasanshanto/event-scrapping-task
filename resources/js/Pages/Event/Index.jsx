@@ -26,7 +26,7 @@ export default function Event({ auth, events, queryParams = null, success }) {
     const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
     const [eventId, setEventId] = useState(null);
-    const [jobStage, setJobStage] = useState("processing");
+    const [jobStage, setJobStage] = useState("");
 
     const searchFieldChanged = (search, value) => {
         if (value) {
@@ -98,6 +98,7 @@ export default function Event({ auth, events, queryParams = null, success }) {
         fetch(`/check-validate/${eventId}`)
             .then((response) => response.json())
             .then((data) => {
+                setJobStage("processing");
                 setEventId(eventId);
                 getJobBatchData(data?.batchId);
                 setIsDropdownOpen(false);
