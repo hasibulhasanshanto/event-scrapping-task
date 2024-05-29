@@ -17,10 +17,8 @@ class CrawlController extends Controller
         $batch = Bus::batch([
             new EventCrawler($eventId),
         ])->then(function (Batch $batch) {
-            Log::info('Success', $batch);
             return true;
         })->catch(function (Batch $batch, Throwable $e) {
-            Log::error('Event creation went wrong'. $e);
             return false;
         })->dispatch();
 

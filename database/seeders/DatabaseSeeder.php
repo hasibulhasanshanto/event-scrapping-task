@@ -20,6 +20,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
-        Event::factory(73)->create();
+        Event::factory(13)->create();
     }
 }

@@ -17,6 +17,7 @@ class EventReport extends Model
      */
     protected $fillable = [
         'event_id',
+        'created_by',
         'title',
         'description',
         'date',

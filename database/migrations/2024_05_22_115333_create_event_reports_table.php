@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('event_reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('event_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('event_id')->constrained('events')->cascadeOnDelete();
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
             $table->string('title');
             $table->longText('description');
-            $table->timestamp('date');
-            $table->timestamp('processed_at');
-            $table->string('source_url');
-            $table->string('base_url');
-            $table->boolean('is_verified');
-            $table->json('report');
+            $table->string('date')->nullable();
+            $table->timestamp('processed_at')->nullable();
+            $table->string('source_url')->nullable();
+            $table->string('base_url')->nullable();
+            $table->boolean('is_verified')->default(false);
+            $table->json('report')->nullable();
             $table->timestamps();
 
             $table->index(['title']);
